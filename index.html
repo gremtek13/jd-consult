@@ -1,0 +1,1020 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>JD Consult — des outils faits pour votre équipe</title>
+<meta name="description" content="JD Consult, conseil en transformation digitale pour les TPE et PME, à Marseille. J’intègre les outils qui existent, je crée sur mesure ceux qui manquent. Premier échange gratuit.">
+<meta name="theme-color" content="#0e0d0b">
+<link rel="icon" href="assets/logo-jd-consult.svg">
+<link rel="preload" href="assets/fonts/instrument-serif.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="assets/fonts/geist.woff2" as="font" type="font/woff2" crossorigin>
+<script>
+  document.documentElement.classList.add('js');
+  if (matchMedia('(prefers-reduced-motion: reduce)').matches) document.documentElement.classList.add('calme');
+  try { if (sessionStorage.getItem('jd-intro')) document.documentElement.classList.add('sans-intro'); sessionStorage.setItem('jd-intro', '1'); } catch (e) {}
+</script>
+<style>
+@font-face { font-family: "Instrument Serif"; src: url(assets/fonts/instrument-serif.woff2) format("woff2"); font-weight: 400; font-display: swap; }
+@font-face { font-family: "Geist"; src: url(assets/fonts/geist.woff2) format("woff2"); font-weight: 300 600; font-display: swap; }
+:root {
+  --nuit: #0e0d0b;
+  --nuit-2: #171512;
+  --creme: #ede6d8;
+  --creme-doux: #a9a294;
+  --or: #b8964f;
+  --or-clair: #d6bd85;
+  --marine: #0f2438;
+  --marge: clamp(20px, 4.4vw, 72px);
+  --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+  --ease-in-out: cubic-bezier(0.77, 0, 0.175, 1);
+  --t-press: 140ms;
+  --t-hover: 200ms;
+}
+*, *::before, *::after { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; background: var(--nuit); }
+html.lenis, html.lenis body { height: auto; }
+.lenis.lenis-smooth { scroll-behavior: auto !important; }
+body {
+  margin: 0; background: var(--nuit); color: var(--creme);
+  font-family: "Geist", system-ui, sans-serif; font-weight: 350;
+  font-size: clamp(1.0625rem, 1rem + 0.25vw, 1.1875rem); line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+}
+::selection { background: var(--or); color: var(--nuit); }
+:focus-visible { outline: 2px solid var(--or); outline-offset: 4px; border-radius: 4px; }
+h1, h2, h3, p, ol, ul, figure { margin: 0; }
+ol, ul { padding: 0; list-style: none; }
+a { color: inherit; }
+img { display: block; max-width: 100%; height: auto; }
+.serif { font-family: "Instrument Serif", Georgia, serif; font-weight: 400; letter-spacing: -0.015em; line-height: 0.98; }
+.visuellement-cache { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+.a-fournir { background: var(--creme); color: var(--nuit); font-size: 0.8125rem; padding: 0.1em 0.45em; border-radius: 4px; white-space: nowrap; }
+
+.bouton {
+  display: inline-flex; align-items: center; gap: 14px; min-height: 52px; padding: 0 26px;
+  border-radius: 999px; text-decoration: none; font-weight: 450; font-size: 1rem;
+  background: var(--or); color: var(--nuit);
+  transition: transform var(--t-press) var(--ease-out), background-color var(--t-hover) ease;
+}
+.bouton svg { width: 16px; height: 16px; transition: transform var(--t-hover) var(--ease-out); }
+.bouton:active { transform: scale(0.97); }
+.bouton.fantome { background: rgba(237, 230, 216, 0.1); color: var(--creme); }
+@media (hover: hover) and (pointer: fine) {
+  .bouton:hover { background: var(--or-clair); }
+  .bouton:hover svg { transform: translateX(3px); }
+  .bouton.fantome:hover { background: rgba(237, 230, 216, 0.08); }
+}
+
+/* ── Le seuil : le logo seul, le site arrive au défilement ── */
+.seuil { position: relative; z-index: 3; height: 100vh; height: 100svh; display: grid; place-items: center; }
+.seuil__logo { will-change: transform, opacity, filter; transform-origin: 50% 50%; display: grid; justify-items: center; gap: 48px; }
+.logo-seuil { width: min(74vw, 620px); height: auto; overflow: visible; }
+.seuil .indice { font-size: 0.8125rem; color: var(--creme-doux); display: inline-flex; flex-direction: column; align-items: center; gap: 12px; }
+.seuil .indice i { width: 1px; height: 40px; background: var(--creme-doux); display: block; transform-origin: top; }
+@media (prefers-reduced-motion: no-preference) {
+  .seuil .indice i { animation: defiler 2.2s var(--ease-in-out) 2.4s infinite both; }
+  .js:not(.sans-intro) .logo-seuil .trace { stroke-dasharray: 1; stroke-dashoffset: 1; animation: trace 1400ms var(--ease-in-out) 200ms forwards; }
+  .js:not(.sans-intro) .logo-seuil .lettres, .js:not(.sans-intro) .logo-seuil .nom { opacity: 0; animation: paraitre 900ms var(--ease-out) forwards; }
+  .js:not(.sans-intro) .logo-seuil .lettres { animation-delay: 1000ms; }
+  .js:not(.sans-intro) .logo-seuil .nom { animation-delay: 1250ms; }
+  .js:not(.sans-intro) .logo-seuil .filet { transform: scaleX(0); transform-box: fill-box; transform-origin: left; animation: filet 900ms var(--ease-out) 1450ms forwards; }
+  .js:not(.sans-intro) .seuil .indice { opacity: 0; animation: paraitre 800ms var(--ease-out) 2000ms forwards; }
+}
+@keyframes trace { to { stroke-dashoffset: 0; } }
+@keyframes paraitre { to { opacity: 1; } }
+@keyframes filet { to { transform: none; } }
+
+/* ── Le monde en 3D, derrière toute la page ── */
+#monde { position: fixed; inset: 0; width: 100%; height: 100%; z-index: 0; display: block; transition: opacity 600ms ease; }
+.etiquettes { position: fixed; inset: 0; z-index: 1; pointer-events: none; }
+.etiquette {
+  position: absolute; left: 0; top: 0; white-space: nowrap; font-size: 0.8125rem; font-weight: 400; letter-spacing: 0.01em;
+  color: var(--creme); display: flex; align-items: center; gap: 10px;
+  opacity: 0; will-change: transform, opacity;
+}
+.etiquette::before { content: ""; flex: none; width: 5px; height: 5px; border-radius: 50%; background: var(--or); outline: 1px solid rgba(184, 150, 79, 0.45); outline-offset: 3px; }
+.etiquette.gauche { flex-direction: row-reverse; }
+.etiquette.or { font-family: "Instrument Serif", Georgia, serif; font-size: 1.25rem; letter-spacing: 0; color: var(--or-clair); }
+main, .index-recit { position: relative; z-index: 2; }
+
+/* ── Barre du haut : fixe, discrète, elle s'efface en descendant ── */
+.barre {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 10;
+  display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: 24px;
+  padding: 20px var(--marge);
+  transition: transform 500ms var(--ease-out), opacity 400ms ease;
+}
+.barre.cachee { transform: translateY(-110%); }
+.js .barre.entree { opacity: 0; pointer-events: none; }
+.barre .logo { justify-self: start; display: block; }
+.barre .logo img { width: 150px; }
+.barre nav { display: flex; gap: clamp(20px, 2.4vw, 40px); }
+.barre nav a { position: relative; display: block; padding: 12px 0; font-size: 0.875rem; letter-spacing: 0.01em; color: rgba(237, 230, 216, 0.66); text-decoration: none; transition: color 300ms ease; }
+.barre nav a .coupe { display: block; overflow: hidden; }
+.barre nav a [data-texte] { display: block; position: relative; transition: transform 420ms var(--ease-out); }
+.barre nav a [data-texte]::after { content: attr(data-texte); position: absolute; left: 0; top: 100%; color: var(--or-clair); }
+.barre nav a::after { content: ""; position: absolute; left: 50%; bottom: 2px; width: 4px; height: 4px; margin-left: -2px; border-radius: 50%; background: var(--or); transform: scale(0); transition: transform 400ms var(--ease-out); }
+.barre nav a[aria-current="true"] { color: var(--creme); }
+.barre nav a[aria-current="true"]::after { transform: scale(1); }
+@media (hover: hover) and (pointer: fine) {
+  .barre nav a:hover { color: var(--creme); }
+  .barre nav a:hover [data-texte] { transform: translateY(-100%); }
+}
+.appel {
+  justify-self: end; position: relative; display: inline-flex; align-items: center; gap: 14px;
+  padding: 5px 5px 5px 22px; border-radius: 999px; text-decoration: none; font-size: 0.875rem; color: var(--creme);
+  background: #1d1b17; overflow: hidden; isolation: isolate;
+  transition: color 400ms var(--ease-out), transform var(--t-press) var(--ease-out);
+}
+.appel::before { content: ""; position: absolute; inset: 0; background: var(--or); border-radius: inherit; transform: scaleX(0); transform-origin: right; transition: transform 520ms var(--ease-out); z-index: -1; }
+.appel__rond { width: 36px; height: 36px; border-radius: 50%; background: var(--or); color: var(--nuit); display: grid; place-items: center; transition: background-color 400ms ease, color 400ms ease; }
+.appel__rond svg { width: 14px; height: 14px; transition: transform 420ms var(--ease-out); }
+.appel:active { transform: scale(0.97); }
+@media (hover: hover) and (pointer: fine) {
+  .appel:hover { color: var(--nuit); }
+  .appel:hover::before { transform: scaleX(1); transform-origin: left; }
+  .appel:hover .appel__rond { background: var(--nuit); color: var(--or); }
+  .appel:hover .appel__rond svg { transform: rotate(45deg); }
+}
+@media (max-width: 899px) { .barre { grid-template-columns: 1fr auto; } .barre nav { display: none; } }
+@media (max-width: 420px) { .appel--grand { font-size: 0.9375rem; padding-left: 20px; } .barre .logo img { width: 120px; } .barre .appel { padding: 4px 4px 4px 14px; gap: 10px; font-size: 0.8125rem; } .barre .appel__rond { width: 36px; height: 36px; } }
+
+/* ── Premier écran ── */
+.ouverture { min-height: 100vh; min-height: 100svh; display: grid; align-content: end; padding: 140px var(--marge) clamp(40px, 7vh, 80px); }
+.ouverture h1 { font-size: clamp(2.5rem, 11vw, 4.5rem); }
+@media (min-width: 900px) { .ouverture h1 { font-size: clamp(4.5rem, 1rem + 8vw, 9.5rem); } }
+.ouverture .pied { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: end; gap: 32px; margin-top: clamp(28px, 4vh, 48px); }
+.ouverture .chapeau { max-width: 36ch; color: var(--creme); }
+.ouverture .actions { display: flex; flex-wrap: wrap; align-items: center; gap: 24px; }
+.lien-fleche { display: inline-flex; align-items: center; gap: 10px; color: var(--creme); text-decoration: none; font-size: 0.9375rem; padding: 10px 0; }
+.lien-fleche svg { width: 16px; height: 16px; transition: transform 420ms var(--ease-out); }
+@media (hover: hover) and (pointer: fine) { .lien-fleche:hover svg { transform: translateY(4px); } }
+.defiler { font-size: 0.875rem; color: var(--creme-doux); display: inline-flex; align-items: center; gap: 10px; }
+.defiler i { width: 1px; height: 28px; background: var(--creme-doux); display: block; transform-origin: top; }
+@media (prefers-reduced-motion: no-preference) { .defiler i { animation: defiler 2.2s var(--ease-in-out) infinite; } }
+@keyframes defiler { 0% { transform: scaleY(0); } 45% { transform: scaleY(1); transform-origin: top; } 55% { transform: scaleY(1); transform-origin: bottom; } 100% { transform: scaleY(0); transform-origin: bottom; } }
+
+/* Entrées : les lignes montent derrière un masque */
+.ligne { display: block; }
+.ligne > span { display: block; }
+@media (prefers-reduced-motion: no-preference) {
+  .js .monte .ligne > span { opacity: 0; transform: scale(0.78); filter: blur(10px); transform-origin: 0 60%; transition: opacity 900ms var(--ease-out), transform 1400ms var(--ease-out), filter 1100ms var(--ease-out); transition-delay: calc(var(--i, 0) * 120ms); }
+  .js .monte.vu .ligne > span { opacity: 1; transform: none; filter: none; }
+  .js .apparait { opacity: 0; transform: scale(0.96); filter: blur(4px); transform-origin: 0 50%; transition: opacity 900ms var(--ease-out), transform 1200ms var(--ease-out), filter 900ms var(--ease-out); transition-delay: calc(var(--i, 0) * 90ms + 260ms); }
+  .js .apparait.vu { opacity: 1; transform: none; filter: none; }
+}
+
+/* ── Le récit ── */
+.recit .chapitre { min-height: 125vh; position: relative; }
+.recit .chapitre:last-child { min-height: 210vh; }
+.recit .texte {
+  position: sticky; top: 0; height: 100vh; height: 100svh;
+  display: grid; align-content: center; gap: 22px;
+  padding: 0 var(--marge); max-width: calc(var(--marge) + 34rem);
+}
+.recit .nom { font-size: 0.875rem; color: var(--or); display: flex; align-items: center; gap: 12px; }
+.recit .nom::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: var(--or); }
+.recit h2 { font-size: clamp(2.125rem, 0.9rem + 4.6vw, 5.75rem); }
+.recit p { color: var(--creme); max-width: 34ch; }
+.recit .detail { color: var(--creme-doux); font-size: 0.9375rem; }
+.repli { display: none; }
+.sans-3d .recit .chapitre { min-height: 0; display: grid; }
+.sans-3d .recit .texte { position: static; height: auto; padding-top: 96px; padding-bottom: 32px; }
+.sans-3d .repli { display: block; padding: 0 var(--marge) 64px; }
+.sans-3d .repli img { width: 100%; max-width: 1100px; border-radius: 6px; }
+.sans-3d #monde, .sans-3d .etiquettes, .sans-3d .index-recit { display: none; }
+@media (max-width: 899px) {
+  .recit .chapitre { min-height: 150vh; }
+  .etiquette { font-size: 0.8125rem; }
+  .etiquette.or { font-size: 1.0625rem; }
+  .recit .texte { align-content: start; padding-top: 18vh; }
+}
+
+/* Index du récit, à droite */
+.index-recit {
+  position: fixed; right: var(--marge); top: 50%; transform: translateY(-50%); z-index: 5;
+  display: grid; gap: 6px; opacity: 0; pointer-events: none; transition: opacity 400ms ease;
+}
+.index-recit { visibility: hidden; }
+.index-recit.visible { opacity: 1; pointer-events: auto; visibility: visible; }
+.index-recit button {
+  font: inherit; font-size: 0.8125rem; color: var(--creme-doux); background: none; border: 0; cursor: pointer;
+  display: flex; align-items: center; justify-content: flex-end; gap: 12px; padding: 6px 0; text-align: right;
+  transition: color var(--t-hover) ease;
+}
+.index-recit button i { width: 6px; height: 6px; border-radius: 50%; background: currentColor; display: block; transition: transform 400ms var(--ease-out), background-color 400ms ease; }
+.index-recit button[aria-current="step"] { color: var(--creme); }
+.index-recit button[aria-current="step"] i { transform: scale(1.6); background: var(--or); }
+@media (hover: hover) and (pointer: fine) { .index-recit button:hover { color: var(--creme); } }
+@media (max-width: 899px) {
+  .index-recit { top: auto; bottom: 0; left: 0; right: 0; transform: none; display: flex; justify-content: center; gap: 0; padding: 10px 8px calc(10px + env(safe-area-inset-bottom)); background: rgba(14, 13, 11, 0.86); }
+  .index-recit button { font-size: 0; padding: 0; width: 44px; height: 44px; justify-content: center; }
+  .index-recit button i { width: 18px; height: 3px; border-radius: 2px; }
+  .index-recit button[aria-current="step"] i { transform: scaleX(1.6); }
+}
+
+/* ── Pour qui ── */
+.pour-qui { position: relative; height: 260vh; background: var(--nuit); }
+.pour-qui .colle { position: sticky; top: 0; height: 100vh; height: 100svh; overflow: hidden; display: grid; align-content: center; padding: 120px var(--marge); }
+.pour-qui .avance { display: flex; gap: 6px; margin-top: 36px; }
+.pour-qui .avance i { width: 28px; height: 2px; border-radius: 1px; background: rgba(237, 230, 216, 0.25); display: block; transition: background-color 400ms ease; }
+.pour-qui .avance i.actif { background: var(--or); }
+.pour-qui .fonds { position: absolute; inset: 0; }
+.pour-qui .fonds img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0; transform: scale(1.06); transition: opacity 900ms ease, transform 2400ms var(--ease-out); filter: grayscale(1) sepia(0.35) brightness(0.36) contrast(1.08); }
+.pour-qui .voile { /* taste-skill-ignore : voile neutre sous le texte, sur une photo */ position: absolute; inset: 0; background: linear-gradient(90deg, rgba(14, 13, 11, 0.85) 0%, rgba(14, 13, 11, 0.4) 55%, rgba(14, 13, 11, 0) 100%); }
+.pour-qui .fonds img.actif { opacity: 1; transform: none; }
+.pour-qui .contenu { position: relative; display: grid; grid-template-columns: minmax(0, 7fr) minmax(0, 4fr); gap: 48px; align-items: center; }
+.pour-qui h2 { font-size: 0.9375rem; font-family: "Geist", sans-serif; letter-spacing: 0; color: var(--or); margin-bottom: 28px; font-weight: 450; }
+.pour-qui ul { display: grid; }
+.pour-qui li button {
+  font: inherit; font-family: "Instrument Serif", Georgia, serif; font-size: clamp(2.25rem, 1rem + 4vw, 5rem); line-height: 1.08; letter-spacing: -0.015em;
+  color: rgba(237, 230, 216, 0.52); background: none; border: 0; padding: 0; cursor: pointer; text-align: left;
+  transition: color 500ms ease;
+}
+.pour-qui li button[aria-pressed="true"] { color: var(--creme); }
+@media (hover: hover) and (pointer: fine) { .pour-qui li button:hover { color: rgba(237, 230, 216, 0.7); } }
+.pour-qui .description { display: grid; gap: 14px; align-content: center; }
+.pour-qui .description p { font-size: clamp(1.125rem, 1rem + 0.5vw, 1.375rem); line-height: 1.4; }
+.pour-qui .description span { font-size: 0.8125rem; color: var(--creme-doux); }
+@media (max-width: 899px) { .pour-qui .contenu { grid-template-columns: 1fr; } }
+
+/* ── Comment je travaille : trois étapes qui défilent à l'horizontale ── */
+.travail { position: relative; background: var(--nuit); }
+.travail__colle { padding: clamp(110px, 16vh, 180px) 0 clamp(80px, 12vh, 140px); display: grid; gap: clamp(40px, 7vh, 80px); }
+.travail__tete { padding: 0 var(--marge); display: flex; flex-wrap: wrap; justify-content: space-between; align-items: end; gap: 20px 48px; }
+.travail__tete h2 { font-size: clamp(2.75rem, 1rem + 5vw, 6.5rem); }
+.travail__tete p { color: var(--creme-doux); }
+.travail__piste { display: grid; gap: 72px; padding: 0 var(--marge); }
+.etape { display: grid; gap: 28px; align-content: start; }
+.dessin { width: clamp(150px, 16vw, 220px); height: auto; overflow: visible; }
+.dessin * { fill: none; stroke: var(--or); stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
+.etape h3 { font-size: clamp(2.25rem, 1rem + 3vw, 4.25rem); }
+.etape__texte { display: grid; gap: 18px; max-width: 34rem; }
+.etape p { color: var(--creme); }
+.etape__note { font-size: 0.875rem; color: var(--or-clair); display: flex; align-items: center; gap: 12px; }
+.etape__note::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: var(--or); }
+.travail__avance { display: none; }
+.travail__suite { justify-self: start; margin: 0 var(--marge); color: var(--or-clair); }
+@media (prefers-reduced-motion: no-preference) {
+  .js .dessin * { stroke-dasharray: 1; stroke-dashoffset: 1; transition: stroke-dashoffset 1600ms var(--ease-in-out); }
+  .js .etape.vu .dessin * { stroke-dashoffset: 0; }
+  .js .etape.vu .dessin *:nth-child(n+3) { transition-delay: 250ms; }
+  .js .etape.vu .dessin *:nth-child(n+6) { transition-delay: 450ms; }
+}
+@media (min-width: 900px) {
+  .horizontal .travail { height: 340vh; }
+  .horizontal .travail__colle { position: sticky; top: 0; height: 100vh; height: 100svh; overflow: hidden; align-content: center; padding: 0; grid-template-columns: minmax(0, 100vw); gap: clamp(48px, 8vh, 96px); }
+  .horizontal .travail__piste { display: flex; gap: 0; padding: 0; width: max-content; will-change: transform; }
+  .horizontal .etape { width: 78vw; padding: 0 var(--marge); grid-template-columns: auto 1fr; gap: clamp(40px, 5vw, 96px); align-items: center; }
+.horizontal .dessin { width: clamp(220px, 22vw, 340px); }
+.horizontal .etape h3 { font-size: clamp(3rem, 1rem + 4vw, 5.75rem); }
+.horizontal .etape p { font-size: clamp(1.125rem, 1rem + 0.45vw, 1.375rem); line-height: 1.45; max-width: 36ch; }
+.horizontal .etape__texte { max-width: 40rem; gap: 24px; }
+  .horizontal .travail__avance { display: block; margin: 0 var(--marge); height: 2px; background: rgba(237, 230, 216, 0.14); border-radius: 1px; }
+  .horizontal .travail__avance i { display: block; height: 100%; background: var(--or); transform-origin: left; transform: scaleX(0); border-radius: 1px; }
+}
+
+/* ── Qui je suis ── */
+.qui { background: var(--nuit-2); padding: clamp(120px, 18vh, 200px) var(--marge); display: grid; gap: clamp(96px, 14vh, 160px); }
+.qui__grille { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: clamp(40px, 6vw, 110px); align-items: start; }
+.portrait { margin: 0; display: grid; gap: 16px; position: sticky; top: 120px; }
+.portrait img { width: 100%; aspect-ratio: 4 / 5; object-fit: cover; object-position: 50% 20%; border-radius: 6px; filter: grayscale(1) contrast(1.04); }
+.portrait figcaption { font-size: 0.875rem; color: var(--creme-doux); display: flex; align-items: center; gap: 12px; }
+.portrait figcaption::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: var(--or); }
+.qui__texte { display: grid; gap: 30px; }
+.qui__texte h2 { font-size: clamp(2.75rem, 1rem + 5vw, 6.5rem); }
+.qui .grand { font-family: "Instrument Serif", Georgia, serif; font-size: clamp(1.5rem, 1rem + 1vw, 1.875rem); line-height: 1.22; letter-spacing: -0.01em; color: var(--creme-doux); max-width: 30ch; }
+.qui .grand em { font-style: normal; color: var(--creme); }
+.qui__texte > p:not(.grand) { color: var(--creme); max-width: 46ch; }
+.faits { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0; margin-top: 12px; }
+.faits li { display: grid; gap: 6px; padding: 20px 22px; margin-right: 8px; background: #1f1c18; border-radius: 6px; }
+.faits b { font-family: "Instrument Serif", Georgia, serif; font-weight: 400; font-size: clamp(1.375rem, 1rem + 0.8vw, 1.875rem); color: var(--or-clair); line-height: 1.1; }
+.faits span { font-size: 0.875rem; color: var(--creme-doux); }
+.outils { display: grid; gap: 32px; }
+.outils h3 { font-size: 0.9375rem; font-weight: 450; color: var(--or); }
+.outils__liste { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+.outil { background: #1f1c18; border-radius: 6px; padding: clamp(28px, 3vw, 48px); display: grid; gap: 16px; align-content: start; transition: background-color 400ms ease; }
+@media (hover: hover) and (pointer: fine) { .outil:hover { background: #272320; } }
+.outil__type { font-size: 0.8125rem; color: var(--creme-doux); }
+.outil h4 { font-size: clamp(2rem, 1rem + 2vw, 3.25rem); line-height: 1; }
+.outil p { color: var(--creme); max-width: 44ch; }
+.outil .lien-fleche { color: var(--or-clair); }
+@media (max-width: 899px) {
+  .qui__grille, .outils__liste { grid-template-columns: 1fr; }
+  .portrait { position: static; max-width: 420px; }
+  .faits { grid-template-columns: 1fr; gap: 0; }
+  .faits li { padding-bottom: 18px; }
+}
+
+/* ── Contact ── */
+.contact { position: relative; overflow: hidden; background: var(--nuit-2); padding: clamp(120px, 18vh, 200px) var(--marge) 120px; display: grid; gap: 28px; min-height: 90vh; min-height: 90svh; align-content: center; }
+.contact > :not(.contact__cercle) { position: relative; z-index: 1; }
+.contact__texte { display: grid; gap: 12px; }
+.contact__cercle { position: absolute; z-index: 0; width: min(64vw, 820px); right: -12vw; top: 50%; transform: translateY(-50%); }
+.contact__cercle circle { fill: none; stroke: var(--or); stroke-width: 0.35; opacity: 0.55; }
+@media (prefers-reduced-motion: no-preference) {
+  .js .contact__cercle circle { stroke-dasharray: 1; stroke-dashoffset: 1; transition: stroke-dashoffset 2400ms var(--ease-in-out) 300ms; }
+  .js .contact.vu .contact__cercle circle { stroke-dashoffset: 0; }
+}
+.copier { font: inherit; font-size: 0.9375rem; color: var(--creme-doux); background: none; border: 0; padding: 0 6px; min-height: 52px; cursor: pointer; text-decoration: underline; text-underline-offset: 0.3em; text-decoration-color: rgba(237, 230, 216, 0.3); transition: color var(--t-hover) ease; }
+@media (hover: hover) and (pointer: fine) { .copier:hover { color: var(--creme); } }
+@media (max-width: 899px) {
+  .contact .contact__tel { order: -1; }
+  .contact__cercle { width: 120vw; right: -60vw; }
+  .contact__cercle circle { opacity: 0.3; }
+}
+.contact h2 { font-size: clamp(3rem, 1rem + 7vw, 8rem); max-width: 12ch; }
+.contact p { max-width: 46ch; color: var(--creme); }
+.contact p + p { color: var(--creme-doux); }
+.contact .rangee { display: flex; flex-wrap: wrap; align-items: center; gap: 14px; }
+.appel--grand { padding: 6px 6px 6px 26px; gap: 18px; font-size: 1rem; }
+.appel--grand .appel__rond { width: 46px; height: 46px; }
+.appel--grand .appel__rond svg { width: 17px; height: 17px; }
+@media (hover: hover) and (pointer: fine) { .appel--grand:hover .appel__rond svg { transform: none; } }
+.pied-page { background: var(--nuit-2); padding: 0 var(--marge) 40px; display: flex; flex-wrap: wrap; justify-content: space-between; gap: 16px; font-size: 0.8125rem; color: var(--creme-doux); }
+.pied-page a { text-underline-offset: 0.25em; }
+
+.capture .barre, .capture main, .capture .index-recit, .capture .intro { display: none !important; }
+</style>
+</head>
+<body>
+
+
+
+<canvas id="monde" aria-hidden="true"></canvas>
+<div class="etiquettes" aria-hidden="true"></div>
+
+<header class="barre">
+  <a class="logo" href="#haut" aria-label="JD Consult, retour en haut"><img src="assets/logo-jd-consult-clair.svg" alt="JD Consult" width="150" height="54"></a>
+  <nav aria-label="Navigation principale">
+    <a href="#recit"><span class="coupe"><span data-texte="Ce que je fais">Ce que je fais</span></span></a>
+    <a href="#methode"><span class="coupe"><span data-texte="Comment je travaille">Comment je travaille</span></span></a>
+    <a href="#pour-qui"><span class="coupe"><span data-texte="Pour qui">Pour qui</span></span></a>
+    <a href="#qui"><span class="coupe"><span data-texte="Qui je suis">Qui je suis</span></span></a>
+  </nav>
+  <a class="appel" href="#contact"><span class="appel__texte">Premier échange gratuit</span><span class="appel__rond" aria-hidden="true"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M3 13L13 3M6 3h7v7"/></svg></span></a>
+</header>
+
+<nav class="index-recit" aria-label="Chapitres du récit">
+  <button type="button" aria-current="step">Le constat<i></i></button>
+  <button type="button">Le diagnostic<i></i></button>
+  <button type="button">Intégrer<i></i></button>
+  <button type="button">Créer<i></i></button>
+  <button type="button">Le résultat<i></i></button>
+</nav>
+
+<main>
+  <section class="seuil" id="haut" aria-label="JD Consult">
+    <div class="seuil__logo">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 310 110" role="img" aria-label="JD Consult" class="logo-seuil"><circle class="trace" pathLength="1" cx="55" cy="55" r="42" fill="none" stroke="#EDE6D8" stroke-width="2.2"/><path class="lettres" fill="#EDE6D8" d="M38.16 70.5Q36.96 70.5 35.56 69.98Q34.16 69.45 32.98 68.44Q32.11 67.71 31.73 66.71Q31.35 65.72 31.35 64.72Q31.35 63.01 32.22 62.01Q33.09 61.02 34.79 61.02Q35.73 61.02 36.29 61.46Q36.85 61.9 36.85 62.33L35.87 68.61Q36.31 68.79 36.85 68.9Q37.39 69.02 38.01 69.02Q39.77 69.02 40.61 67.67Q41.46 66.31 41.46 63.26L41.48 49.51Q41.48 48.8 40.91 48.48Q40.33 48.15 39.54 48.04Q38.74 47.94 38.06 47.9Q37.71 47.87 37.58 47.76Q37.46 47.65 37.46 47.29Q37.46 47.11 37.6 46.77Q37.74 46.44 38.02 46.44H49.73Q50.01 46.44 50.15 46.77Q50.29 47.11 50.29 47.29Q50.29 47.89 49.75 47.9Q48.48 47.95 47.74 48.19Q46.99 48.42 46.99 48.97V62.71Q46.99 65.15 46.16 66.68Q45.33 68.21 43.99 69.04Q42.66 69.87 41.11 70.18Q39.57 70.5 38.16 70.5ZM53.35 70Q53.07 70 52.92 69.67Q52.78 69.34 52.78 69.15Q52.78 68.61 53.33 68.54Q54.13 68.47 54.93 68.25Q55.74 68.02 55.74 67.48V49.51Q55.74 48.8 55.32 48.48Q54.89 48.17 54.31 48.06Q53.73 47.95 53.22 47.9Q52.87 47.87 52.74 47.76Q52.62 47.65 52.62 47.29Q52.62 47.11 52.76 46.77Q52.9 46.44 53.18 46.44H64.74Q68.12 46.46 70.65 47.41Q73.17 48.35 74.85 49.96Q76.52 51.57 77.35 53.59Q78.18 55.61 78.18 57.75Q78.18 60.34 77.4 62.35Q76.62 64.36 75.31 65.8Q74 67.24 72.39 68.17Q70.78 69.1 69.1 69.55Q67.43 70 65.93 70ZM61.33 67.21Q61.33 67.44 61.6 67.7Q61.86 67.96 62.6 68.14Q63.34 68.32 64.79 68.32Q66.3 68.32 67.57 68Q68.84 67.68 69.77 66.64Q70.7 65.6 71.2 63.49Q71.71 61.38 71.71 57.81Q71.71 54.73 71.15 52.81Q70.6 50.89 69.62 49.85Q68.64 48.82 67.35 48.43Q66.06 48.05 64.62 48.05H61.35Z"/><path class="nom" fill="#EDE6D8" d="M120.13 50.38Q119.28 50.38 118.37 50.06Q117.46 49.75 116.62 49.04Q116.03 48.45 115.79 47.77Q115.56 47.09 115.56 46.47Q115.56 45.34 116.11 44.68Q116.66 44.02 117.55 44.02Q117.95 44.02 118.22 44.15Q118.49 44.29 118.49 44.43L117.93 48.57Q118.31 48.86 118.84 49.05Q119.37 49.25 120.01 49.25Q121.35 49.25 122.13 48.22Q122.92 47.18 122.92 44.85L122.93 34.33Q122.93 33.79 122.71 33.54Q122.48 33.29 122.1 33.21Q121.73 33.13 121.26 33.1Q120.99 33.08 120.9 32.99Q120.8 32.91 120.8 32.63Q120.8 32.49 120.91 32.24Q121.02 31.99 121.23 31.99H127.14Q127.35 31.99 127.46 32.24Q127.57 32.49 127.57 32.63Q127.57 33.06 127.15 33.1Q126.59 33.15 126.07 33.32Q125.55 33.5 125.55 33.92V44.43Q125.55 46.29 124.98 47.46Q124.42 48.63 123.56 49.26Q122.69 49.9 121.77 50.14Q120.85 50.38 120.13 50.38ZM130.23 50Q130.02 50 129.91 49.75Q129.8 49.49 129.8 49.35Q129.8 48.93 130.22 48.88Q130.83 48.83 131.45 48.66Q132.06 48.49 132.06 48.07V34.33Q132.06 33.79 131.74 33.55Q131.42 33.31 130.97 33.22Q130.53 33.14 130.13 33.1Q129.87 33.08 129.77 32.99Q129.68 32.91 129.68 32.63Q129.68 32.49 129.78 32.24Q129.89 31.99 130.11 31.99H137.67Q140.26 32 142.04 32.72Q143.82 33.45 144.9 34.68Q145.98 35.91 146.46 37.45Q146.94 38.99 146.94 40.63Q146.94 42.61 146.42 44.15Q145.9 45.68 145.01 46.79Q144.12 47.89 143.01 48.6Q141.89 49.31 140.68 49.66Q139.48 50 138.33 50ZM134.75 47.87Q134.75 48.04 134.96 48.24Q135.16 48.44 135.73 48.58Q136.29 48.72 137.39 48.72Q138.55 48.72 139.69 48.47Q140.83 48.22 141.77 47.43Q142.7 46.64 143.26 45.02Q143.82 43.41 143.82 40.68Q143.82 38.32 143.22 36.85Q142.62 35.39 141.65 34.59Q140.68 33.8 139.53 33.51Q138.37 33.22 137.27 33.22H134.77ZM163.75 50.38Q162.23 50.38 160.68 49.92Q159.14 49.45 157.86 48.39Q156.58 47.32 155.8 45.52Q155.03 43.72 155.03 41.04Q155.03 38.52 155.82 36.73Q156.62 34.93 157.88 33.8Q159.15 32.67 160.63 32.14Q162.11 31.6 163.48 31.6Q165.17 31.6 166.3 31.8Q167.42 32 168.14 32.26Q168.85 32.52 169.3 32.72L169.58 36.7Q169.6 36.91 169.37 37.06Q169.15 37.2 168.99 37.2Q168.96 37.2 168.92 37.21Q168.89 37.22 168.85 37.22Q168.69 37.22 168.56 37.13Q168.43 37.05 168.41 36.85Q168.12 35.78 167.51 34.86Q166.91 33.94 165.92 33.38Q164.93 32.82 163.46 32.82Q162.65 32.82 161.74 33.08Q160.84 33.34 160.06 34.16Q159.28 34.97 158.79 36.61Q158.29 38.26 158.29 41.04Q158.29 43.68 158.84 45.29Q159.4 46.9 160.25 47.75Q161.11 48.59 162.04 48.88Q162.98 49.17 163.74 49.17Q165.18 49.17 166.12 48.62Q167.05 48.07 167.58 47.15Q168.12 46.23 168.32 45.14Q168.37 44.88 168.48 44.8Q168.59 44.72 168.79 44.72Q168.94 44.72 169.25 44.83Q169.56 44.93 169.56 45.15L169.16 48.63Q169.15 48.81 168.45 49.23Q167.75 49.66 166.54 50.02Q165.32 50.38 163.75 50.38ZM180.53 50.37Q178.53 50.37 176.96 49.63Q175.39 48.9 174.31 47.59Q173.22 46.29 172.66 44.58Q172.09 42.87 172.09 40.91Q172.09 38.31 173.12 36.2Q174.15 34.09 176.06 32.85Q177.98 31.6 180.66 31.6Q183.34 31.6 185.21 32.85Q187.08 34.09 188.07 36.2Q189.05 38.31 189.05 40.91Q189.05 42.87 188.47 44.58Q187.9 46.29 186.8 47.59Q185.7 48.9 184.12 49.63Q182.54 50.37 180.53 50.37ZM180.58 49.17Q182.69 49.17 183.83 48.18Q184.98 47.18 185.43 45.33Q185.88 43.49 185.88 40.94Q185.88 38.38 185.41 36.56Q184.95 34.73 183.78 33.76Q182.62 32.79 180.52 32.79Q178.41 32.79 177.26 33.76Q176.12 34.73 175.68 36.56Q175.24 38.38 175.24 40.94Q175.24 43.49 175.7 45.33Q176.17 47.18 177.33 48.18Q178.49 49.17 180.58 49.17ZM191.46 50Q191.25 50 191.14 49.75Q191.03 49.49 191.03 49.35Q191.03 48.93 191.45 48.88Q191.86 48.84 192.31 48.76Q192.77 48.67 193.1 48.44Q193.42 48.22 193.42 47.82V34.33Q193.42 33.79 193.07 33.55Q192.72 33.31 192.24 33.22Q191.77 33.14 191.38 33.1Q191.11 33.08 191.01 32.99Q190.92 32.91 190.92 32.63Q190.92 32.49 191.03 32.24Q191.13 31.99 191.35 31.99H195.64L205.5 46.03H205.66V34.33Q205.66 33.79 205.24 33.55Q204.83 33.31 204.3 33.22Q203.77 33.14 203.37 33.1Q203.11 33.08 203.01 32.99Q202.92 32.91 202.92 32.63Q202.92 32.49 203.02 32.24Q203.13 31.99 203.35 31.99H209.12Q209.34 31.99 209.45 32.24Q209.55 32.49 209.55 32.63Q209.55 33.05 209.14 33.1Q208.75 33.14 208.23 33.22Q207.7 33.31 207.31 33.55Q206.91 33.79 206.91 34.33V48.57Q206.91 48.81 206.94 48.97Q206.96 49.12 206.99 49.49Q207.03 50.03 206.76 50.2Q206.5 50.38 206.23 50.38Q205.77 50.38 205.54 50.1L194.89 35.35H194.68V47.65Q194.68 48.2 195.06 48.44Q195.44 48.68 195.95 48.76Q196.45 48.83 196.83 48.88Q197.1 48.91 197.2 48.98Q197.29 49.06 197.29 49.35Q197.29 49.49 197.18 49.75Q197.08 50 196.86 50ZM218.14 50.38Q216.68 50.38 215.9 50.01Q215.12 49.64 214.68 49.43Q214.33 49.24 214.1 49.1Q213.87 48.96 213.66 48.96Q213.57 48.96 213.46 49Q213.36 49.05 213.26 49.17Q213.03 49.45 212.79 49.57Q212.55 49.7 212.36 49.7Q212.12 49.7 211.97 49.52Q211.83 49.35 211.84 49.09Q211.87 48.83 211.87 48.57Q211.87 48.3 211.87 48.03Q211.87 46.78 211.73 45.71Q211.59 44.64 211.59 44.05Q211.59 43.72 211.78 43.56Q211.98 43.4 212.21 43.4Q212.75 43.4 212.88 43.93Q212.96 44.25 213.14 44.84Q213.33 45.43 213.83 46.52Q214.29 47.49 214.99 48.09Q215.7 48.69 216.47 48.97Q217.25 49.25 217.92 49.25Q218.7 49.25 219.42 49.01Q220.14 48.77 220.62 48.11Q221.09 47.45 221.09 46.2Q221.09 45.26 220.52 44.52Q219.94 43.78 219.02 43.17Q218.1 42.56 217.08 42.05Q216.21 41.61 215.35 41.09Q214.49 40.58 213.79 39.93Q213.08 39.27 212.65 38.42Q212.22 37.56 212.2 36.43Q212.16 35.12 212.64 34.2Q213.12 33.28 213.91 32.71Q214.7 32.14 215.64 31.87Q216.58 31.6 217.45 31.6Q218.47 31.6 219.15 31.76Q219.83 31.92 220.24 32.09Q220.65 32.25 220.82 32.25Q221.12 32.25 221.24 32.14Q221.36 32.02 221.54 31.91Q221.68 31.82 221.88 31.82Q222.14 31.82 222.36 31.97Q222.58 32.11 222.58 32.3Q222.58 33.08 222.66 33.79Q222.75 34.51 222.83 35.13Q222.91 35.76 222.91 36.24Q222.91 36.63 222.71 36.79Q222.5 36.95 222.25 36.95Q222.06 36.95 221.89 36.86Q221.72 36.77 221.69 36.66Q221.55 35.83 221.27 35.18Q220.99 34.54 220.61 34.05Q220.22 33.57 219.75 33.25Q219.28 32.92 218.75 32.77Q218.23 32.61 217.67 32.61Q216.79 32.61 216.11 32.9Q215.42 33.19 215.03 33.86Q214.65 34.52 214.65 35.67Q214.65 36.48 215.24 37.17Q215.83 37.86 216.75 38.47Q217.67 39.08 218.64 39.65Q219.47 40.14 220.35 40.68Q221.23 41.21 222 41.88Q222.76 42.55 223.23 43.39Q223.71 44.22 223.71 45.29Q223.71 46.94 222.96 48.08Q222.21 49.21 220.95 49.8Q219.69 50.38 218.14 50.38ZM241.23 34.38 241.2 43.45Q241.2 45.75 240.42 47.28Q239.63 48.82 238.18 49.59Q236.72 50.37 234.69 50.37Q232.39 50.37 230.9 49.49Q229.41 48.62 228.69 47.05Q227.96 45.49 227.96 43.45L227.98 34.33Q227.98 33.79 227.68 33.54Q227.39 33.29 226.98 33.21Q226.57 33.13 226.17 33.1Q225.91 33.08 225.81 32.99Q225.72 32.91 225.72 32.63Q225.72 32.49 225.82 32.24Q225.93 31.99 226.15 31.99H232.85Q233.07 31.99 233.17 32.24Q233.28 32.49 233.28 32.63Q233.28 33.06 232.86 33.1Q232.43 33.13 231.92 33.22Q231.4 33.31 231.04 33.47Q230.67 33.64 230.67 33.92L230.65 43.35Q230.65 46.32 231.66 47.75Q232.67 49.17 234.74 49.17Q236.75 49.17 237.84 48.44Q238.93 47.71 239.36 46.43Q239.79 45.15 239.79 43.47V34.21Q239.79 33.78 239.38 33.55Q238.97 33.33 238.44 33.24Q237.92 33.14 237.56 33.1Q237.29 33.08 237.2 32.99Q237.1 32.91 237.1 32.63Q237.1 32.49 237.21 32.24Q237.32 31.99 237.54 31.99H243.44Q243.65 31.99 243.76 32.24Q243.87 32.49 243.87 32.63Q243.87 33.09 243.45 33.1Q242.47 33.15 241.85 33.46Q241.23 33.78 241.23 34.38ZM246.21 50Q245.99 50 245.88 49.75Q245.77 49.49 245.77 49.35Q245.77 48.93 246.19 48.88Q246.8 48.83 247.35 48.66Q247.91 48.49 247.91 48.07L247.92 34.33Q247.92 33.79 247.63 33.55Q247.34 33.31 246.92 33.22Q246.51 33.14 246.12 33.1Q245.85 33.08 245.76 32.99Q245.66 32.91 245.66 32.63Q245.66 32.49 245.77 32.24Q245.88 31.99 246.09 31.99H252.6Q252.82 31.99 252.93 32.24Q253.04 32.49 253.04 32.63Q253.04 33.1 252.62 33.1Q252.2 33.1 251.7 33.2Q251.21 33.31 250.86 33.57Q250.51 33.83 250.51 34.3L250.5 47.75Q250.5 48.38 250.93 48.55Q251.36 48.72 251.83 48.72H255.45Q256.04 48.72 256.6 48.03Q257.15 47.33 257.61 46.33Q258.06 45.33 258.37 44.41Q258.44 44.19 258.61 44.09Q258.77 44 258.98 44Q259.22 44 259.36 44.1Q259.51 44.21 259.49 44.43L258.86 50ZM264.27 50Q264.06 50 263.95 49.75Q263.84 49.49 263.84 49.35Q263.84 48.93 264.26 48.88Q264.86 48.84 265.46 48.75Q266.06 48.65 266.46 48.41Q266.86 48.16 266.86 47.69L266.87 33.24H263.65Q263.1 33.24 262.75 33.75Q262.39 34.26 262.18 34.98Q261.97 35.69 261.88 36.35Q261.78 37.01 261.76 37.32Q261.73 37.56 261.61 37.65Q261.49 37.74 261.29 37.74Q261.15 37.74 260.89 37.63Q260.63 37.52 260.64 37.3Q260.67 36.68 260.71 35.79Q260.75 34.89 260.82 34.02Q260.88 33.15 260.95 32.57Q261.01 31.99 261.08 31.99H275.28Q275.35 31.99 275.42 32.57Q275.48 33.15 275.54 34.02Q275.61 34.89 275.65 35.79Q275.7 36.68 275.71 37.3Q275.71 37.52 275.46 37.63Q275.2 37.74 275.06 37.74Q274.86 37.74 274.74 37.65Q274.62 37.56 274.59 37.32Q274.57 37.01 274.47 36.35Q274.38 35.69 274.17 34.98Q273.97 34.26 273.62 33.75Q273.26 33.24 272.71 33.24H269.5L269.49 47.65Q269.49 48.2 269.91 48.44Q270.34 48.69 270.94 48.77Q271.55 48.84 272.05 48.88Q272.32 48.91 272.42 48.98Q272.51 49.06 272.51 49.35Q272.51 49.49 272.4 49.75Q272.29 50 272.08 50Z"/><rect class="filet" x="116" y="62" width="180" height="2.5" fill="#B8964F"/></svg>
+      <span class="indice"><i></i>Faites défiler</span>
+    </div>
+  </section>
+  <section class="ouverture" id="accueil" aria-labelledby="titre">
+    <h1 class="serif monte" id="titre"><span class="ligne"><span>Des outils faits</span></span><span class="ligne" style="--i:1"><span>pour votre équipe.</span></span></h1>
+    <div class="pied">
+      <p class="chapeau apparait">Conseil en transformation digitale pour les TPE et PME, à Marseille. J’intègre les outils qui existent, je crée sur mesure ceux qui manquent.</p>
+      <div class="actions apparait" style="--i:1">
+        <a class="lien-fleche" href="#recit">Voir ce que je fais <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M8 2v11M4 9l4 4 4-4"/></svg></a>
+      </div>
+    </div>
+  </section>
+
+  <section class="recit" id="recit" aria-labelledby="recit-titre">
+    <h2 class="visuellement-cache" id="recit-titre">Ce que je fais, en cinq temps</h2>
+    <article class="chapitre" data-etat="0">
+      <div class="texte">
+        <span class="nom apparait">Le constat</span>
+        <h2 class="serif monte"><span class="ligne"><span>Chacun bricole</span></span><span class="ligne" style="--i:1"><span>dans son coin.</span></span></h2>
+        <p class="apparait" style="--i:1">Un carnet, des groupes de discussion, un tableur par personne et un logiciel acheté mais jamais ouvert. L’information existe&nbsp;; personne ne la retrouve.</p>
+      </div>
+      <figure class="repli"><img src="assets/scene/etat-1.webp" width="1600" height="900" loading="lazy" alt="Des dizaines de fragments d’écrans, de documents et de messages flottent en désordre dans le noir."></figure>
+    </article>
+    <article class="chapitre" data-etat="1">
+      <div class="texte">
+        <span class="nom apparait">Le diagnostic</span>
+        <h2 class="serif monte"><span class="ligne"><span>D’abord,</span></span><span class="ligne" style="--i:1"><span>je viens voir.</span></span></h2>
+        <p class="apparait" style="--i:1">Sur place, avec vous et votre équipe. Pour chaque métier, je note ce qui se ressaisit, ce qui se perd et ce qui coince.</p>
+        <p class="detail apparait" style="--i:2">Le dirigeant, le commercial, le chantier, l’administration&nbsp;: chacun a ses besoins.</p>
+      </div>
+      <figure class="repli"><img src="assets/scene/etat-2.webp" width="1600" height="900" loading="lazy" alt="Les fragments se rangent en quatre colonnes, une par métier."></figure>
+    </article>
+    <article class="chapitre" data-etat="2">
+      <div class="texte">
+        <span class="nom apparait">Intégrer</span>
+        <h2 class="serif monte"><span class="ligne"><span>Ce qui existe déjà,</span></span><span class="ligne" style="--i:1"><span>on le branche.</span></span></h2>
+        <p class="apparait" style="--i:1">Souvent, l’outil qu’il vous faut existe déjà. Je le choisis avec vous, je le règle et je le relie aux autres, pour que chacun n’ait qu’un seul accès.</p>
+      </div>
+      <figure class="repli"><img src="assets/scene/etat-3.webp" width="1600" height="900" loading="lazy" alt="Cinq groupes de fragments, cinq outils, reliés par des fils d’or à un même centre."></figure>
+    </article>
+    <article class="chapitre" data-etat="3">
+      <div class="texte">
+        <span class="nom apparait">Créer</span>
+        <h2 class="serif monte"><span class="ligne"><span>Ce qui manque,</span></span><span class="ligne" style="--i:1"><span>je le construis.</span></span></h2>
+        <p class="apparait" style="--i:1">Quand aucun logiciel ne colle à votre façon de travailler, je conçois un outil sur mesure, pensé pour ceux qui s’en serviront.</p>
+      </div>
+      <figure class="repli"><img src="assets/scene/etat-4.webp" width="1600" height="900" loading="lazy" alt="Tous les fragments s’assemblent en un seul grand écran."></figure>
+    </article>
+    <article class="chapitre" data-etat="4">
+      <div class="texte">
+        <span class="nom apparait">Le résultat</span>
+        <h2 class="serif monte"><span class="ligne"><span>Chacun son outil,</span></span><span class="ligne" style="--i:1"><span>tout est relié.</span></span></h2>
+        <p class="apparait" style="--i:1">Le dirigeant voit où il en est, le commercial suit ses clients, l’équipe de chantier a son planning en poche. Et je forme chacun à s’en servir.</p>
+      </div>
+      <figure class="repli"><img src="assets/scene/etat-5.webp" width="1600" height="900" loading="lazy" alt="Les fragments forment un anneau d’or, le cercle du logo JD Consult."></figure>
+    </article>
+  </section>
+
+
+  <section class="travail" id="methode" aria-labelledby="travail-titre">
+    <div class="travail__colle">
+      <div class="travail__tete">
+        <h2 class="serif monte" id="travail-titre"><span class="ligne"><span>Comment je travaille</span></span></h2>
+        <p class="apparait">Trois temps, un seul interlocuteur du début à la fin.</p>
+      </div>
+      <ol class="travail__piste">
+        <li class="etape">
+          <svg class="dessin" viewBox="0 0 240 200" aria-hidden="true">
+            <rect pathLength="1" x="18" y="28" width="130" height="86" rx="22"/><path pathLength="1" d="M52 114 L44 140 L76 114"/>
+            <rect pathLength="1" x="96" y="78" width="126" height="78" rx="22"/><path pathLength="1" d="M190 156 L200 180 L168 156"/>
+            <circle pathLength="1" cx="132" cy="117" r="5"/><circle pathLength="1" cx="159" cy="117" r="5"/><circle pathLength="1" cx="186" cy="117" r="5"/>
+          </svg>
+          <div class="etape__texte">
+            <h3 class="serif">Le premier échange</h3>
+            <p>Une heure, au téléphone ou chez vous. Vous me racontez votre entreprise, je pose des questions, et je vous dis franchement si je peux vous aider.</p>
+            <span class="etape__note">Gratuit, sans engagement.</span>
+          </div>
+        </li>
+        <li class="etape">
+          <svg class="dessin" viewBox="0 0 240 200" aria-hidden="true">
+            <rect pathLength="1" x="20" y="24" width="44" height="44" rx="8"/><rect pathLength="1" x="76" y="24" width="44" height="44" rx="8"/><rect pathLength="1" x="132" y="24" width="44" height="44" rx="8"/>
+            <rect pathLength="1" x="20" y="80" width="44" height="44" rx="8"/><rect pathLength="1" x="76" y="80" width="44" height="44" rx="8"/><rect pathLength="1" x="20" y="136" width="44" height="44" rx="8"/>
+            <circle pathLength="1" cx="150" cy="122" r="40"/><path pathLength="1" d="M179 151 L214 186"/>
+          </svg>
+          <div class="etape__texte">
+            <h3 class="serif">Le plan</h3>
+            <p>Je passe du temps dans votre entreprise, avec chaque métier. Puis je vous remets un plan écrit&nbsp;: ce qu’on intègre, ce qu’on crée, dans quel ordre et pour quel prix.</p>
+            <span class="etape__note">Un devis clair avant tout engagement.</span>
+          </div>
+        </li>
+        <li class="etape">
+          <svg class="dessin" viewBox="0 0 240 200" aria-hidden="true">
+            <circle pathLength="1" cx="120" cy="100" r="22"/>
+            <circle pathLength="1" cx="120" cy="22" r="13"/><circle pathLength="1" cx="196" cy="70" r="13"/><circle pathLength="1" cx="170" cy="168" r="13"/><circle pathLength="1" cx="70" cy="168" r="13"/><circle pathLength="1" cx="44" cy="70" r="13"/>
+            <path pathLength="1" d="M120 78 V35 M140 92 L184 74 M133 118 L162 157 M107 118 L78 157 M100 92 L56 74"/>
+          </svg>
+          <div class="etape__texte">
+            <h3 class="serif">La mise en place</h3>
+            <p>J’installe, je relie, je construis ce qui manque. Je forme chaque personne à ses outils, et je reste joignable ensuite.</p>
+            <span class="etape__note">Je travaille avec votre expert-comptable, je ne le remplace pas.</span>
+          </div>
+        </li>
+      </ol>
+      <div class="travail__avance" aria-hidden="true"><i></i></div>
+      <a class="lien-fleche travail__suite" href="#contact">Commencer par un premier échange <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 8h11M9 4l4 4-4 4"/></svg></a>
+    </div>
+  </section>
+
+  <section class="pour-qui" id="pour-qui" aria-labelledby="pour-qui-titre">
+   <div class="colle">
+    <div class="fonds" aria-hidden="true">
+      <img src="assets/photos/artisans.webp" alt="" width="1600" height="1000" loading="lazy" class="actif">
+      <img src="assets/photos/commerces.webp" alt="" width="1600" height="1000" loading="lazy">
+      <img src="assets/photos/restaurants.webp" alt="" width="1600" height="1000" loading="lazy">
+      <img src="assets/photos/cabinets.webp" alt="" width="1600" height="1000" loading="lazy">
+      <img src="assets/photos/services.webp" alt="" width="1600" height="1000" loading="lazy">
+    </div>
+    <div class="voile" aria-hidden="true"></div>
+    <div class="contenu">
+      <div>
+        <h2 id="pour-qui-titre">Pour qui je travaille</h2>
+        <ul>
+          <li><button type="button" aria-pressed="true" data-texte="Devis sur place, bons d’intervention, planning des équipes et des chantiers.">Artisans et BTP</button></li>
+          <li><button type="button" aria-pressed="false" data-texte="Caisse, stocks, commandes et suivi des clients, au même endroit.">Commerces</button></li>
+          <li><button type="button" aria-pressed="false" data-texte="Réservations, plannings du personnel, commandes aux fournisseurs.">Cafés et restaurants</button></li>
+          <li><button type="button" aria-pressed="false" data-texte="Rendez-vous, dossiers clients, facturation et relances.">Cabinets et libéraux</button></li>
+          <li><button type="button" aria-pressed="false" data-texte="Suivi commercial, devis, relances et tableau de bord du dirigeant.">Entreprises de services</button></li>
+        </ul>
+      </div>
+      <div class="description">
+        <p>Devis sur place, bons d’intervention, planning des équipes et des chantiers.</p>
+        <span>Des exemples de besoins, pas une liste fermée.</span>
+        <span class="avance" aria-hidden="true"><i class="actif"></i><i></i><i></i><i></i><i></i></span>
+      </div>
+    </div>
+   </div>
+  </section>
+
+  <section class="qui" id="qui" aria-labelledby="qui-titre">
+    <div class="qui__grille">
+      <figure class="portrait apparait">
+        <img src="assets/photos/jeremy-darnis.webp" width="1000" height="1555" loading="lazy" alt="Portrait de Jérémy Darnis, souriant, en veste claire et chemise blanche.">
+      </figure>
+      <div class="qui__texte">
+        <h2 class="serif monte" id="qui-titre"><span class="ligne"><span>Qui je suis</span></span></h2>
+        <p class="grand apparait">Je m’appelle <em>Jérémy Darnis</em>. Soignant devenu consultant, j’en garde une méthode&nbsp;: écouter avant d’agir, suivre dans le temps.</p>
+        <p class="apparait" style="--i:1">Avant JD Consult, j’ai été soignant pendant plusieurs années. Je prépare aujourd’hui un MBA en management et stratégie d’entreprise. Et je construis moi-même des outils de gestion&nbsp;: c’est ce qui me permet de créer pour vous ce qui manque, au lieu de vous vendre ce qui existe.</p>
+      </div>
+    </div>
+    <div class="outils">
+      <h3 class="apparait">Deux outils que j’ai construits</h3>
+      <div class="outils__liste">
+        <article class="outil apparait">
+          <h4 class="serif">JD precompta</h4>
+          <p>Une application web pour la précomptabilité d’un cabinet comptable et de ses clients&nbsp;: pièces déposées et lues automatiquement, rapprochement bancaire, factures et facture électronique, déclarations préparées.</p>
+          <a class="lien-fleche" href="https://compta.jdarnis.fr" target="_blank" rel="noopener">compta.jdarnis.fr <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 13L13 3M6 3h7v7"/></svg></a>
+        </article>
+        <article class="outil apparait" style="--i:1">
+          <h4 class="serif">JD Factu</h4>
+          <p>Un outil sur mesure pour la facturation et le planning d’un cabinet infirmier&nbsp;: patients, ordonnances, tournées du mois et suivi de ce qui a été déclaré.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="contact" id="contact" aria-labelledby="contact-titre">
+    <h2 class="serif monte" id="contact-titre"><span class="ligne"><span>Parlons de</span></span><span class="ligne" style="--i:1"><span>votre entreprise.</span></span></h2>
+    <div class="contact__texte">
+      <p class="apparait">Une heure, gratuite et sans engagement, au téléphone ou chez vous&nbsp;: vous me présentez votre entreprise, et je vous dis franchement si je peux vous aider.</p>
+      <p class="apparait" style="--i:1">Sur place à Marseille et dans les Bouches-du-Rhône, à distance partout ailleurs.</p>
+    </div>
+    <div class="rangee apparait" style="--i:2">
+      <a class="appel appel--grand contact__mail" href="mailto:contact@jdarnis.fr?subject=Premier%20%C3%A9change%20-%20JD%20Consult&amp;body=Bonjour%20J%C3%A9r%C3%A9my%2C%0A%0AJe%20dirige%20%E2%80%A6%20(votre%20activit%C3%A9%2C%20nombre%20de%20personnes).%0AJ%E2%80%99aimerais%20%C3%A9changer%20sur%20%E2%80%A6%0A%0AVous%20pouvez%20me%20joindre%20au%20%E2%80%A6%0A%0AMerci%2C"><span class="appel__texte">Écrire à contact@jdarnis.fr</span><span class="appel__rond" aria-hidden="true"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="3.5" width="12" height="9" rx="1.5"/><path d="M2.5 4.5L8 9l5.5-4.5"/></svg></span></a>
+      <a class="appel appel--grand contact__tel" href="tel:+33614149444"><span class="appel__texte">Appeler le 06&nbsp;14&nbsp;14&nbsp;94&nbsp;44</span><span class="appel__rond" aria-hidden="true"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3.5 2.5h2.6l1.2 3-1.6 1a8 8 0 0 0 3.8 3.8l1-1.6 3 1.2v2.6a1 1 0 0 1-1 1A11 11 0 0 1 2.5 3.5a1 1 0 0 1 1-1z"/></svg></span></a>
+      <button type="button" class="copier" data-adresse="contact@jdarnis.fr"><span class="copier__texte" aria-live="polite">Copier l’adresse e-mail</span></button>
+    </div>
+    <svg class="contact__cercle" viewBox="0 0 100 100" aria-hidden="true"><circle pathLength="1" cx="50" cy="50" r="46"/></svg>
+  </section>
+</main>
+<footer class="pied-page">
+  <span>JD Consult · Marseille · <a href="mentions-legales.html">Mentions légales</a></span>
+  <span>Photos d’ambiance (Unsplash)&nbsp;: Todd Quackenbush, Jeff Sheldon, Karl Fredrickson, Alejandro Escamilla.</span>
+</footer>
+
+<script src="assets/lib/lenis.min.js" defer></script>
+<script>
+(() => {
+const racine = document.documentElement;
+const params = new URLSearchParams(location.search);
+const capture = params.has('capture');
+const calme = racine.classList.contains('calme');
+/* ── Entrées des textes ── */
+const aObserver = document.querySelectorAll('.monte, .apparait, .etape');
+if ('IntersectionObserver' in window && !capture) {
+  const io = new IntersectionObserver((es) => { for (const e of es) if (e.isIntersecting) { e.target.classList.add('vu'); io.unobserve(e.target); } }, { rootMargin: '0px 0px -8% 0px' });
+  aObserver.forEach((el) => io.observe(el));
+} else aObserver.forEach((el) => el.classList.add('vu'));
+
+/* ── Pour qui : la liste qui s'éclaire ── */
+const metiers = [...document.querySelectorAll('.pour-qui li button')];
+const fonds = [...document.querySelectorAll('.pour-qui .fonds img')];
+const description = document.querySelector('.pour-qui .description p');
+const choisir = (i) => {
+  metiers.forEach((b, k) => b.setAttribute('aria-pressed', String(k === i)));
+  fonds.forEach((f, k) => f.classList.toggle('actif', k === i));
+  description.textContent = metiers[i].dataset.texte;
+};
+metiers.forEach((b, i) => {
+  b.addEventListener('click', () => {
+    const pq = document.querySelector('.pour-qui');
+    const cible = pq.getBoundingClientRect().top + scrollY + (pq.offsetHeight - innerHeight) * (i + 0.5) / metiers.length;
+    if (window.lenis) window.lenis.scrollTo(cible, { duration: 1.2 }); else scrollTo({ top: cible, behavior: calme ? 'auto' : 'smooth' });
+  });
+});
+
+/* ── Défilement fluide ── */
+function lancerLenis() {
+  if (calme || capture || !window.Lenis) return;
+  const lenis = new window.Lenis({ lerp: 0.085, smoothWheel: true });
+  window.lenis = lenis;
+  const boucle = (t) => { lenis.raf(t); requestAnimationFrame(boucle); };
+  requestAnimationFrame(boucle);
+  document.querySelectorAll('a[href^="#"]').forEach((a) => a.addEventListener('click', (e) => {
+    const cible = document.querySelector(a.getAttribute('href'));
+    if (cible) { e.preventDefault(); lenis.scrollTo(cible, { duration: 1.4 }); }
+  }));
+}
+if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', lancerLenis); else lancerLenis();
+
+/* Au défilement : le logo s'efface, la barre arrive, et « Pour qui » avance métier par métier */
+const seuil = document.querySelector('.seuil__logo');
+const barre = document.querySelector('.barre');
+const pourQui = document.querySelector('.pour-qui');
+const traits = [...document.querySelectorAll('.pour-qui .avance i')];
+let dernierY = scrollY, metierCourant = 0, demande = false;
+barre.classList.toggle('entree', scrollY < innerHeight * 0.5);
+function auDefilement() {
+  demande = false;
+  const y = scrollY, h = innerHeight;
+  const p = Math.min(1, y / (h * 0.7));
+  /* Le logo s'enfonce dans l'écran, à sa place, pendant que les cartes en jaillissent */
+  const e = p * p * (3 - 2 * p);
+  seuil.style.opacity = String(Math.max(0, 1 - e * 1.15));
+  if (!calme) {
+    seuil.style.transform = `translateY(${Math.min(y, h).toFixed(1)}px) scale(${(1 - e * 0.72).toFixed(4)})`;
+    seuil.style.filter = e > 0.01 ? `blur(${(e * 6).toFixed(2)}px)` : '';
+  }
+  barre.classList.toggle('entree', y < h * 0.5);
+  if (y > dernierY + 4 && y > h) barre.classList.add('cachee');
+  else if (y < dernierY - 4) barre.classList.remove('cachee');
+  dernierY = y;
+  auDefilementTravail(y, h);
+  const haut = pourQui.getBoundingClientRect().top + y, course = pourQui.offsetHeight - h;
+  const q = Math.min(0.999, Math.max(0, (y - haut) / course));
+  const i = Math.floor(q * metiers.length);
+  if (i !== metierCourant) { metierCourant = i; choisir(i); traits.forEach((t, k) => t.classList.toggle('actif', k === i)); }
+}
+const travail = document.querySelector('.travail');
+const piste = document.querySelector('.travail__piste');
+const avance = document.querySelector('.travail__avance i');
+const etapes = [...document.querySelectorAll('.etape')];
+const horizontal = matchMedia('(min-width: 900px)');
+const reglerTravail = () => racine.classList.toggle('horizontal', horizontal.matches && !calme);
+reglerTravail(); horizontal.addEventListener('change', () => { reglerTravail(); piste.style.transform = ''; });
+function auDefilementTravail(y, h) {
+  if (!racine.classList.contains('horizontal')) return;
+  const haut = travail.getBoundingClientRect().top + y, course = travail.offsetHeight - h;
+  const q = Math.min(1, Math.max(0, (y - haut) / course));
+  const decalage = Math.max(0, piste.scrollWidth - innerWidth);
+  piste.style.transform = `translateX(${(-q * decalage).toFixed(1)}px)`;
+  avance.style.transform = `scaleX(${q.toFixed(4)})`;
+  etapes.forEach((el, k) => { if (q > k / etapes.length - 0.12) el.classList.add('vu'); });
+}
+addEventListener('scroll', () => { if (!demande) { demande = true; requestAnimationFrame(auDefilement); } }, { passive: true });
+auDefilement();
+
+/* La navigation marque la section en cours */
+const liensNav = [...document.querySelectorAll('.barre nav a')];
+if ('IntersectionObserver' in window) {
+  const ioNav = new IntersectionObserver((es) => {
+    for (const e of es) if (e.isIntersecting) liensNav.forEach((a) => { if (a.getAttribute('href') === '#' + e.target.id) a.setAttribute('aria-current', 'true'); else a.removeAttribute('aria-current'); });
+  }, { rootMargin: '-45% 0px -50% 0px' });
+  ['recit', 'methode', 'pour-qui', 'qui', 'contact'].forEach((id) => { const el = document.getElementById(id); if (el) ioNav.observe(el); });
+}
+/* Copier l'adresse : un repli quand aucune messagerie ne s'ouvre */
+const copier = document.querySelector('.copier');
+copier.addEventListener('click', async () => {
+  const texte = copier.querySelector('.copier__texte');
+  try { await navigator.clipboard.writeText(copier.dataset.adresse); texte.textContent = 'Adresse copiée : ' + copier.dataset.adresse; }
+  catch (e) { texte.textContent = copier.dataset.adresse; }
+  setTimeout(() => { texte.textContent = 'Copier l’adresse e-mail'; }, 4000);
+});
+if ('IntersectionObserver' in window) {
+  const io2 = new IntersectionObserver(([e]) => { if (e.isIntersecting) { e.target.classList.add('vu'); io2.disconnect(); } }, { threshold: 0.3 });
+  io2.observe(document.querySelector('.contact'));
+} else document.querySelector('.contact').classList.add('vu');
+/* Sans 3D (bibliothèque absente, WebGL refusé) : la page montre les images du récit */
+addEventListener('load', () => setTimeout(() => { if (!window.__monde) racine.classList.add('sans-3d'); }, 1500));
+})();
+</script>
+<script type="module">
+import * as THREE from './assets/lib/three.module.min.js';
+
+window.__monde = true;
+const racine = document.documentElement;
+const params = new URLSearchParams(location.search);
+const capture = params.has('capture');
+const calme = racine.classList.contains('calme');
+const mobile = matchMedia('(max-width: 899px)').matches;
+matchMedia('(max-width: 899px)').addEventListener('change', () => location.reload());
+
+/* ── Le monde en 3D ── */
+const COUL = { nuit: 0x0e0d0b, creme: '#ede6d8', encre: '#2a2620', or: '#b8964f', orClair: '#d6bd85', doux: '#b9b1a1' };
+let renderer;
+try {
+  if (calme && !capture) throw new Error('mouvement réduit');
+  renderer = new THREE.WebGLRenderer({ canvas: document.getElementById('monde'), antialias: true, powerPreference: 'high-performance' });
+} catch (e) {
+  racine.classList.add('sans-3d');
+}
+
+if (renderer) {
+  renderer.setPixelRatio(Math.min(devicePixelRatio, mobile ? 1.5 : 2));
+  renderer.setClearColor(COUL.nuit, 1);
+  const scene = new THREE.Scene();
+  scene.fog = new THREE.Fog(COUL.nuit, 16, 42);
+  const camera = new THREE.PerspectiveCamera(mobile ? 50 : 36, 1, 0.1, 100);
+  camera.position.set(0, 0, 20);
+
+  /* Les fenêtres : sombres, au trait fin, avec de vrais contenus (un exemple fictif, jamais des barres grises) */
+  await Promise.all([document.fonts.load('400 30px Geist'), document.fonts.load('500 30px Geist'), document.fonts.load('400 60px "Instrument Serif"')]).catch(() => {});
+  const C = { fond: '#23201b', fond2: '#312d26', trait: 'rgba(237,230,216,0.22)', texte: '#f3ede1', doux: 'rgba(237,230,216,0.66)', pale: 'rgba(237,230,216,0.4)', or: '#b8964f', orClair: '#d6bd85', vert: '#8fb08a' };
+  const F = (t, poids = 400) => `${poids} ${t}px Geist, system-ui, sans-serif`;
+  function fenetre(l, h, titre, meta, dessin, opts = {}) {
+    const W = 1024, H = Math.round(1024 * h / l), r = opts.rayon ?? 34;
+    const c = document.createElement('canvas'); c.width = W; c.height = H;
+    const g = c.getContext('2d');
+    g.beginPath(); g.roundRect(3, 3, W - 6, H - 6, r); g.fillStyle = opts.fond || C.fond; g.fill();
+    g.save(); g.clip();
+    if (titre) {
+      g.fillStyle = C.texte; g.font = F(34, 500); g.textBaseline = 'middle'; g.fillText(titre, 48, 62);
+      if (meta) { g.fillStyle = C.doux; g.font = F(28); g.textAlign = 'right'; g.fillText(meta, W - 48, 62); g.textAlign = 'left'; }
+      g.fillStyle = C.trait; g.fillRect(0, 112, W, 2);
+    }
+    dessin(g, W, H);
+    g.restore();
+    g.lineWidth = 4; g.strokeStyle = opts.bord || 'rgba(237,230,216,0.42)'; g.beginPath(); g.roundRect(3, 3, W - 6, H - 6, r); g.stroke();
+    const t = new THREE.CanvasTexture(c); t.colorSpace = THREE.SRGBColorSpace; t.anisotropy = 8;
+    return { t, l, h };
+  }
+  const pastille = (g, x, y, txt, coul, fond) => { g.font = F(26, 500); const w = g.measureText(txt).width + 36; g.fillStyle = fond; g.beginPath(); g.roundRect(x - w, y - 22, w, 44, 22); g.fill(); g.fillStyle = coul; g.textBaseline = 'middle'; g.fillText(txt, x - w + 18, y + 1); };
+  const ligne = (g, x, y, a, b, coulA = C.texte, coulB = C.doux) => { g.textBaseline = 'middle'; g.font = F(30); g.fillStyle = coulA; g.fillText(a, x, y); if (b) { g.font = F(24); g.fillStyle = coulB; g.fillText(b, x, y + 36); } };
+
+  const modeles = [
+    fenetre(1.7, 1.06, 'Planning', 'Semaine 43', (g, W, H) => {
+      const jours = ['Lun.', 'Mar.', 'Mer.', 'Jeu.', 'Ven.']; const lc = (W - 96) / 5;
+      jours.forEach((j, k) => { g.fillStyle = C.doux; g.font = F(26); g.fillText(j, 48 + k * lc, 160); if (k) { g.fillStyle = C.trait; g.fillRect(48 + k * lc - 10, 190, 2, H - 230); } });
+      [[0, 0, 2, 'Pose cuisine Leca', C.or], [1, 2, 1, 'Atelier', 'rgba(237,230,216,0.14)'], [2, 0, 1, 'Livraison Roux', 'rgba(143,176,138,0.35)'], [3, 1, 2, 'Visite Borély', 'rgba(237,230,216,0.14)'], [4, 0, 1, 'Facturation', 'rgba(184,150,79,0.4)']].forEach(([k, y, d, txt, coul]) => {
+        g.fillStyle = coul; g.beginPath(); g.roundRect(48 + k * lc, 205 + y * 130, lc - 22, d * 120, 14); g.fill();
+        g.fillStyle = coul === C.or ? C.fond : C.texte; g.font = F(24, 500); g.fillText(txt.length > 14 ? txt.slice(0, 13) + '…' : txt, 62 + k * lc, 240 + y * 130);
+      });
+    }),
+    fenetre(1.5, 1.0, 'Chiffre d’affaires', '6 mois', (g, W, H) => {
+      const v = [0.42, 0.55, 0.38, 0.22, 0.66, 0.84], x0 = 70, l = W - 140, y0 = H - 110, ht = H - 300;
+      for (let k = 0; k < 4; k++) { g.fillStyle = C.trait; g.fillRect(x0, y0 - k * ht / 3, l, 2); }
+      g.beginPath(); v.forEach((a, k) => { const x = x0 + k * l / 5, y = y0 - a * ht; k ? g.lineTo(x, y) : g.moveTo(x, y); }); g.strokeStyle = C.or; g.lineWidth = 6; g.lineJoin = 'round'; g.stroke();
+      v.forEach((a, k) => { g.fillStyle = k === 5 ? C.orClair : C.or; g.beginPath(); g.arc(x0 + k * l / 5, y0 - a * ht, k === 5 ? 13 : 8, 0, 7); g.fill(); g.fillStyle = C.doux; g.font = F(24); g.fillText(['mai', 'juin', 'juil.', 'août', 'sept.', 'oct.'][k], x0 + k * l / 5 - 22, y0 + 50); });
+      g.fillStyle = C.texte; g.font = '400 92px "Instrument Serif", Georgia, serif'; g.fillText('+ 18 %', 70, 200);
+    }),
+    fenetre(1.5, 1.05, 'Équipe chantier', '3 en ligne', (g, W, H) => {
+      const bulles = [[0, 'Qui a les cotes de la cuisine ?', 'Karim · 7 h 42'], [1, 'Dans le dossier Leca, onglet Plans.', 'Vous · 7 h 44'], [0, 'Trouvé, merci.', 'Karim · 7 h 46']];
+      bulles.forEach(([moi, t, m], k) => { g.font = F(28); const w = g.measureText(t).width + 56; const x = moi ? W - 48 - w : 48, y = 160 + k * 150; g.fillStyle = moi ? 'rgba(184,150,79,0.9)' : C.fond2; g.beginPath(); g.roundRect(x, y, w, 76, 30); g.fill(); g.fillStyle = moi ? C.fond : C.texte; g.textBaseline = 'middle'; g.fillText(t, x + 28, y + 38); g.fillStyle = C.pale; g.font = F(22); g.fillText(m, moi ? x + w - g.measureText(m).width : x + 6, y + 104); });
+    }),
+    fenetre(0.74, 1.5, null, null, (g, W, H) => {
+      g.fillStyle = C.pale; g.beginPath(); g.roundRect(W / 2 - 90, 40, 180, 40, 20); g.fill();
+      g.fillStyle = C.texte; g.font = '400 92px "Instrument Serif", Georgia, serif'; g.fillText('Prospects', 64, 220);
+      [['Martin SARL', 'Marseille 8e', 'Relancer', C.or], ['M. Roux', 'Aubagne', 'Signé', C.vert], ['Mme Leca', 'Cassis', 'Posé', C.vert], ['Café Borély', 'Marseille 8e', 'Jeudi', C.orClair], ['SCI Goudes', 'Marseille 8e', 'Devis', C.orClair]].forEach(([n, v, s, c], k) => {
+        const y = 330 + k * 230; g.fillStyle = C.fond2; g.beginPath(); g.roundRect(48, y, W - 96, 190, 28); g.fill(); ligne(g, 88, y + 70, n, v); g.font = F(26, 500); g.fillStyle = c; g.textAlign = 'right'; g.fillText(s, W - 90, y + 70); g.textAlign = 'left';
+      });
+    }, { rayon: 90 }),
+    fenetre(1.6, 1.05, 'Devis D-2026-042', 'SCI Les Goudes', (g, W, H) => {
+      [['Fournitures, plan chêne', '1 140,00'], ['Main-d’œuvre, 2 jours', '1 170,00'], ['Dépose et évacuation', '180,00']].forEach(([a, b], k) => { const y = 180 + k * 74; g.font = F(30); g.fillStyle = C.texte; g.fillText(a, 48, y); g.textAlign = 'right'; g.fillStyle = C.doux; g.fillText(b + ' €', W - 48, y); g.textAlign = 'left'; g.fillStyle = C.trait; g.fillRect(48, y + 36, W - 96, 2); });
+      g.fillStyle = C.doux; g.font = F(28); g.fillText('Total HT', 48, H - 90); g.textAlign = 'right'; g.fillStyle = C.orClair; g.font = '400 84px "Instrument Serif", Georgia, serif'; g.fillText('2 490,00 €', W - 48, H - 80); g.textAlign = 'left';
+    }),
+    fenetre(1.45, 0.46, null, null, (g, W, H) => {
+      g.fillStyle = C.or; g.beginPath(); g.arc(90, H / 2, 40, 0, 7); g.fill();
+      g.strokeStyle = C.fond; g.lineWidth = 8; g.beginPath(); g.moveTo(70, H / 2); g.lineTo(86, H / 2 + 16); g.lineTo(112, H / 2 - 14); g.stroke();
+      ligne(g, 160, H / 2 - 18, 'Facture F-2026-087 payée', 'Mme Leca · 1 980,00 €');
+    }, { rayon: 60 }),
+    fenetre(0.95, 0.95, null, null, (g, W, H) => {
+      const cx = W / 2, cy = H / 2 - 20, r = 300;
+      g.lineWidth = 26; g.strokeStyle = C.fond2; g.beginPath(); g.arc(cx, cy, r, 0, 7); g.stroke();
+      g.strokeStyle = C.or; g.lineCap = 'round'; g.beginPath(); g.arc(cx, cy, r, -Math.PI / 2, -Math.PI / 2 + Math.PI * 2 * 0.72); g.stroke();
+      g.fillStyle = C.texte; g.textAlign = 'center'; g.font = '400 210px "Instrument Serif", Georgia, serif'; g.textBaseline = 'middle'; g.fillText('72 %', cx, cy);
+      g.font = F(30); g.fillStyle = C.doux; g.fillText('Planning rempli', cx, H - 90); g.textAlign = 'left';
+    }, { rayon: 60 }),
+    fenetre(1.7, 1.0, 'Suivi des chantiers', '6 en cours', (g, W, H) => {
+      const cols = ['À faire', 'En cours', 'Terminé'], lc = (W - 96) / 3;
+      cols.forEach((t, k) => { g.fillStyle = C.doux; g.font = F(26); g.fillText(t, 48 + k * lc, 160); });
+      [[0, 0, 'Café Borély'], [0, 1, 'SCI Goudes'], [1, 0, 'Cuisine Leca'], [1, 1, 'Escalier Roux'], [2, 0, 'Dressing Ferri']].forEach(([k, y, t]) => {
+        g.fillStyle = k === 1 ? 'rgba(184,150,79,0.22)' : C.fond2; g.beginPath(); g.roundRect(48 + k * lc, 200 + y * 120, lc - 24, 100, 18); g.fill();
+        g.fillStyle = C.texte; g.font = F(26, 500); g.fillText(t, 70 + k * lc, 252 + y * 120);
+      });
+    }),
+    fenetre(1.55, 1.0, 'Bon d’intervention', 'Chantier Leca', (g, W, H) => {
+      [['Client', 'Mme Leca, Cassis'], ['Travaux', 'Pose cuisine'], ['Temps', '6 h 30, 2 pers.']].forEach(([a, b], k) => { g.font = F(24); g.fillStyle = C.doux; g.fillText(a, 48, 172 + k * 62); g.font = F(28); g.fillStyle = C.texte; g.fillText(b, 260, 172 + k * 62); });
+      g.fillStyle = C.fond2; g.beginPath(); g.roundRect(48, 360, W - 96, H - 410, 20); g.fill();
+      g.strokeStyle = C.orClair; g.lineWidth = 5; g.lineCap = 'round'; g.beginPath(); g.moveTo(110, H - 110); g.bezierCurveTo(170, H - 210, 220, H - 210, 230, H - 120); g.bezierCurveTo(250, H - 70, 320, H - 170, 380, H - 140); g.bezierCurveTo(430, H - 110, 470, H - 180, 560, H - 130); g.stroke();
+      g.fillStyle = C.pale; g.font = F(22); g.fillText('Signature du client', 76, 395);
+    }),
+    fenetre(1.6, 1.0, 'Clients', '42 fiches', (g, W, H) => {
+      [['ML', 'Mme Leca', 'Cassis'], ['MR', 'M. Roux', 'Aubagne'], ['CB', 'Café Borély', 'Marseille 8e']].forEach(([i, n, v], k) => {
+        const y = 190 + k * 130; g.fillStyle = k === 0 ? C.or : C.fond2; g.beginPath(); g.arc(96, y + 18, 44, 0, 7); g.fill();
+        g.fillStyle = k === 0 ? C.fond : C.texte; g.font = F(28, 500); g.textAlign = 'center'; g.textBaseline = 'middle'; g.fillText(i, 96, y + 19); g.textAlign = 'left';
+        ligne(g, 170, y, n, v);
+      });
+    }),
+    fenetre(1.5, 1.0, null, null, (g, W, H) => {
+      g.fillStyle = C.doux; g.font = F(28); g.fillText('Encaissé en octobre', 56, 110);
+      g.fillStyle = C.texte; g.font = '400 190px "Instrument Serif", Georgia, serif'; g.textBaseline = 'alphabetic'; g.fillText('18 420 €', 50, 330);
+      g.fillStyle = C.trait; g.fillRect(56, 400, W - 112, 2);
+      g.textBaseline = 'middle'; g.font = F(28); g.fillStyle = C.doux; g.fillText('À encaisser', 56, 470); g.fillText('En retard', W / 2, 470);
+      g.fillStyle = C.orClair; g.font = '400 84px "Instrument Serif", Georgia, serif'; g.fillText('4 260 €', 56, 560); g.fillStyle = C.texte; g.fillText('0', W / 2, 560);
+    }, { fond: '#2a261f', bord: 'rgba(214,189,133,0.8)' }),
+    fenetre(1.6, 1.0, 'Messagerie', '3 non lus', (g, W, H) => {
+      [['Bois du Midi', 'Commande 4471 expédiée', '9 h 12'], ['Mme Leca', 'Merci pour la pose, tout est parfait.', '8 h 40'], ['Expert-comptable', 'Pièces d’octobre bien reçues.', 'Hier']].forEach(([a, b, h], k) => {
+        const y = 175 + k * 120; if (k < 2) { g.fillStyle = C.or; g.beginPath(); g.arc(62, y, 9, 0, 7); g.fill(); }
+        ligne(g, 92, y, a, b); g.font = F(24); g.fillStyle = C.pale; g.textAlign = 'right'; g.fillText(h, W - 48, y); g.textAlign = 'left';
+      });
+    }),
+  ];
+
+  const N = mobile ? 64 : 120;
+  const panneaux = [];
+  const alea = (() => { let s = 7; return () => { s = (s * 16807) % 2147483647; return (s - 1) / 2147483646; }; })();
+  const centreX = mobile ? 0 : 3.6, centreY = mobile ? -4.4 : 0;
+  const CR = mobile ? { cols: 3, ligs: 4, l: 1.45, h: 1.0 } : { cols: 4, ligs: 3, l: 2.0, h: 1.36 };
+  const ECART = mobile ? 1.5 : 2.4, PAS = mobile ? 0.3 : 0.36, RAYON = mobile ? 2.5 : 4.0, R_ANNEAU = mobile ? 2.6 : 4.5;
+
+  for (let i = 0; i < N; i++) {
+    const mod = modeles[i % modeles.length];
+    const mat = new THREE.MeshBasicMaterial({ map: mod.t, transparent: true, side: THREE.DoubleSide, opacity: 1, fog: true });
+    const m = new THREE.Mesh(new THREE.PlaneGeometry(mod.l, mod.h), mat);
+    scene.add(m);
+    panneaux.push({ m, mod, phase: alea() * Math.PI * 2, vitesse: 0.3 + alea() * 0.5, etats: [], retard: alea() * 0.5,
+      tourbillon: new THREE.Quaternion().setFromEuler(new THREE.Euler((alea() - 0.5) * 6, (alea() - 0.5) * 6, (alea() - 0.5) * 6)),
+      depart: new THREE.Vector3((alea() - 0.5) * 0.6, (alea() - 0.5) * 0.4, 4 + alea() * 2) });
+  }
+
+  /* Cinq états : désordre, colonnes par métier, outils reliés, un seul écran, l'anneau */
+  const q = (x, y, z) => new THREE.Quaternion().setFromEuler(new THREE.Euler(x, y, z));
+  panneaux.forEach((p, i) => {
+    const s0 = 0.7 + alea() * 0.7;
+    const x0 = (alea() - 0.5) * 26 + centreX * 0.4, z0 = mobile ? -17 + alea() * 11 : -12 + alea() * 16 - (x0 < -2 ? 8 : 0);
+    p.etats.push({ pos: new THREE.Vector3(x0, (alea() - 0.5) * 15, z0), rot: q((alea() - 0.5) * 1.6, (alea() - 0.5) * 1.8, (alea() - 0.5) * 1.2), s: s0 });
+
+    const col = i % 4, rang = Math.floor(i / 4), nRang = Math.ceil(N / 4);
+    p.etats.push({ pos: new THREE.Vector3(centreX + (col - 1.5) * ECART, centreY + ((nRang - 1) / 2 - rang) * PAS, -2 - rang * 0.12 + (alea() - 0.5) * 0.3), rot: q(-0.08, 0.18, 0), s: mobile ? 0.5 : 0.62 });
+
+    const groupe = i % 5, dans = Math.floor(i / 5);
+    const angle = -Math.PI / 2 + groupe * (Math.PI * 2 / 5) + 0.3;
+    const rayon = RAYON;
+    const gx = centreX + Math.cos(angle) * rayon, gy = centreY + Math.sin(angle) * rayon * 0.82;
+    const dc = dans % 4, dr = Math.floor(dans / 4);
+    const k2 = mobile ? 0.62 : 1;
+    p.etats.push({ pos: new THREE.Vector3(gx + (dc - 1.5) * 0.52 * k2, gy + (dr - 2.5) * 0.36 * k2, -0.5 - dans * 0.02), rot: q(0, 0, 0), s: 0.3 * k2 });
+
+    if (i < 12) {
+      const c3 = i % CR.cols, l3 = Math.floor(i / CR.cols);
+      const dec = new THREE.Vector3((c3 - (CR.cols - 1) / 2) * CR.l, ((CR.ligs - 1) / 2 - l3) * CR.h, 0.06).applyQuaternion(q(-0.1, -0.28, 0));
+      p.etats.push({ pos: new THREE.Vector3(centreX, centreY, 0).add(dec), rot: q(-0.1, -0.28, 0), s: Math.min(CR.l / p.mod.l, CR.h / p.mod.h) * 0.9 });
+    } else {
+      p.etats.push({ pos: new THREE.Vector3(centreX + (alea() - 0.5) * 10, centreY + (alea() - 0.5) * 7, -9 - alea() * 6), rot: q(-0.1, -0.28, 0), s: 0.4, o: 0 });
+    }
+
+    const a4 = (i / N) * Math.PI * 2;
+    const r4 = R_ANNEAU;
+    const rot4 = new THREE.Quaternion().setFromEuler(new THREE.Euler(0, 0, a4 + Math.PI / 2));
+    p.etats.push({ pos: new THREE.Vector3(centreX + Math.cos(a4) * r4, centreY + Math.sin(a4) * r4, 0), rot: rot4.multiply(q(0, 0.75, 0)), s: mobile ? 0.36 : 0.5 });
+  });
+
+  /* Les fils d'or de l'état « intégrer », et l'anneau de l'état final */
+  const moyeu = new THREE.Vector3(centreX, centreY, -0.5);
+  const sommets = [];
+  for (let g = 0; g < 5; g++) {
+    const angle = -Math.PI / 2 + g * (Math.PI * 2 / 5) + 0.3, rayon = RAYON;
+    sommets.push(moyeu.x, moyeu.y, moyeu.z, centreX + Math.cos(angle) * rayon, centreY + Math.sin(angle) * rayon * 0.82, -0.5);
+  }
+  const geoFils = new THREE.BufferGeometry(); geoFils.setAttribute('position', new THREE.Float32BufferAttribute(sommets, 3));
+  const fils = new THREE.LineSegments(geoFils, new THREE.LineBasicMaterial({ color: COUL.or, transparent: true, opacity: 0 }));
+  scene.add(fils);
+  const rNoeud = mobile ? 0.42 : 0.55;
+  const noeud = new THREE.Group();
+  const matNoeud = new THREE.MeshBasicMaterial({ color: COUL.or, transparent: true, opacity: 0, side: THREE.DoubleSide });
+  noeud.add(new THREE.Mesh(new THREE.RingGeometry(rNoeud - 0.018, rNoeud, 96), matNoeud));
+  noeud.add(new THREE.Mesh(new THREE.CircleGeometry(0.07, 32), matNoeud));
+  noeud.material = matNoeud;
+  noeud.position.copy(moyeu); scene.add(noeud);
+  const anneau = new THREE.Mesh(new THREE.TorusGeometry(R_ANNEAU, mobile ? 0.012 : 0.018, 8, 200), new THREE.MeshBasicMaterial({ color: COUL.or, transparent: true, opacity: 0 }));
+  anneau.position.set(centreX, centreY, 0); scene.add(anneau);
+
+  /* Le cadre d'or de l'outil sur mesure */
+  const cadre = (() => {
+    const l = CR.cols * CR.l + 0.5, h = CR.ligs * CR.h + 0.5, W = 1024, H = Math.round(1024 * h / l);
+    const c = document.createElement('canvas'); c.width = W; c.height = H; const g = c.getContext('2d');
+    g.lineWidth = 6; g.strokeStyle = '#b8964f'; g.beginPath(); g.roundRect(6, 6, W - 12, H - 12, 28); g.stroke();
+    const t = new THREE.CanvasTexture(c); t.colorSpace = THREE.SRGBColorSpace;
+    const m = new THREE.Mesh(new THREE.PlaneGeometry(l, h), new THREE.MeshBasicMaterial({ map: t, transparent: true, opacity: 0, depthWrite: false }));
+    m.renderOrder = -1; m.position.set(centreX, centreY, 0); m.quaternion.copy(q(-0.1, -0.28, 0)); scene.add(m); return m;
+  })();
+
+  /* Étiquettes en HTML, posées sur des points de la scène */
+  const calque = document.querySelector('.etiquettes');
+  const etiquettes = [];
+  const etiquette = (texte, etat, point, or = false, gauche = false) => {
+    const el = document.createElement('span'); el.className = 'etiquette' + (or ? ' or' : ''); el.textContent = texte; calque.append(el);
+    if (gauche) el.classList.add('gauche');
+    etiquettes.push({ el, etat, point, centre: or, gauche });
+  };
+  const nRang = Math.ceil(N / 4);
+  (mobile ? [] : ['Le dirigeant', 'Le commercial', 'Le chantier', 'L’administration']).forEach((t, c) => etiquette(t, 1, new THREE.Vector3(centreX + (c - 1.5) * ECART, centreY + ((nRang - 1) / 2) * PAS + 0.6, -2)));
+  (mobile ? [] : ['Agenda partagé', 'Messagerie d’équipe', 'Devis et factures', 'Stockage partagé', 'Logiciel de planning']).forEach((t, g) => {
+    const angle = -Math.PI / 2 + g * (Math.PI * 2 / 5) + 0.3, rayon = RAYON;
+    etiquette(t, 2, new THREE.Vector3(centreX + Math.cos(angle) * rayon, centreY + Math.sin(angle) * rayon * 0.82 - (mobile ? 0.8 : 1.25), -0.5), false, Math.cos(angle) > 0.25);
+  });
+  etiquette('Un compte par personne', 2, moyeu.clone().add(new THREE.Vector3(0, -rNoeud - 0.45, 0)), true);
+  etiquette('Un outil conçu pour votre équipe', 3, new THREE.Vector3(centreX, centreY - CR.ligs * CR.h / 2 - 0.55, 0), true);
+
+  /* Le défilement décide de l'état */
+  const chapitres = [...document.querySelectorAll('.recit .chapitre')];
+  const index = document.querySelector('.index-recit');
+  const boutonsIndex = [...index.querySelectorAll('button')];
+  let ancres = [];
+  const mesurer = () => {
+    const w = innerWidth, h = innerHeight;
+    renderer.setSize(w, h, false);
+    camera.aspect = w / h;
+    camera.position.z = mobile ? 17 : (w / h < 1.5 ? 22 : 20);
+    camera.updateProjectionMatrix();
+    ancres = chapitres.map((c) => c.getBoundingClientRect().top + scrollY + c.offsetHeight * 0.33 - h * 0.15);
+  };
+  mesurer();
+  addEventListener('resize', mesurer);
+
+  const lisse = (t) => t * t * (3 - 2 * t);
+  const etatDuDefilement = (y) => {
+    if (capture) return Math.max(0, Math.min(4, (parseInt(params.get('capture'), 10) || 1) - 1));
+    if (y <= ancres[0]) return 0;
+    for (let k = 0; k < 4; k++) {
+      if (y < ancres[k + 1]) {
+        const t = (y - ancres[k]) / (ancres[k + 1] - ancres[k]);
+        return k + lisse(Math.min(1, Math.max(0, (t - 0.2) / 0.6)));
+      }
+    }
+    return 4;
+  };
+
+  let courant = -1;
+  boutonsIndex.forEach((b, k) => b.addEventListener('click', () => {
+    const cible = ancres[k] + 2;
+    if (window.lenis) window.lenis.scrollTo(cible, { duration: 1.6 }); else scrollTo({ top: cible, behavior: 'smooth' });
+  }));
+
+  const pointeur = new THREE.Vector2(0, 0), regard = new THREE.Vector2(0, 0);
+  addEventListener('pointermove', (e) => { pointeur.set(e.clientX / innerWidth - 0.5, e.clientY / innerHeight - 0.5); }, { passive: true });
+
+  const tmpP = new THREE.Vector3(), tmpQ = new THREE.Quaternion(), proj = new THREE.Vector3();
+  const finRecit = () => { const d = document.querySelector('.travail'); return d.getBoundingClientRect().top + scrollY; };
+  let visible = true, horloge = 0, dernier = performance.now(), entreeLisse = -1;
+
+  function rendre(now) {
+    const dt = Math.min(0.05, (now - dernier) / 1000); dernier = now; horloge += dt;
+    const y = scrollY;
+    const s = etatDuDefilement(y);
+    const a = Math.floor(s), b = Math.min(4, a + 1), t = s - a;
+
+    /* Après le récit, le monde s'efface */
+    const fin = finRecit();
+    const fondu = capture ? 1 : Math.min(1, Math.max(0, 1 - (y + innerHeight * 0.55 - fin) / (innerHeight * 0.45)));
+    /* L'arrivée des cartes : elles jaillissent du logo au premier défilement, en douceur */
+    const cibleEntree = capture ? 1 : Math.min(1, Math.max(0, y / (innerHeight * 0.85)));
+    if (entreeLisse < 0) entreeLisse = cibleEntree;
+    entreeLisse += (cibleEntree - entreeLisse) * (1 - Math.exp(-dt * 4));
+    const entree = entreeLisse;
+    renderer.domElement.style.opacity = fondu.toFixed(3);
+    const dansRecit = y > ancres[0] - innerHeight * 0.6 && y < fin - innerHeight * 0.4;
+    index.classList.toggle('visible', dansRecit && !capture);
+    if (fondu <= 0.001) { for (const e of etiquettes) e.el.style.opacity = '0'; if (visible) requestAnimationFrame(rendre); return; }
+
+    const calmeIci = capture ? 0 : 1;
+    for (const p of panneaux) {
+      const A = p.etats[a], B = p.etats[b];
+      tmpP.lerpVectors(A.pos, B.pos, t);
+      const flottement = (a === 0 && t < 0.5 ? 1 - t * 2 : 0.18) * calmeIci;
+      tmpP.x += Math.sin(horloge * p.vitesse + p.phase) * 0.35 * flottement;
+      tmpP.y += Math.cos(horloge * p.vitesse * 0.8 + p.phase) * 0.3 * flottement;
+      p.m.position.copy(tmpP);
+      tmpQ.slerpQuaternions(A.rot, B.rot, t);
+      p.m.quaternion.copy(tmpQ);
+      if (a === 0 && t < 0.6) p.m.rotateY(Math.sin(horloge * 0.2 + p.phase) * 0.25 * (1 - t) * calmeIci);
+      p.m.scale.setScalar(A.s + (B.s - A.s) * t);
+      p.m.material.opacity = (A.o ?? 1) + ((B.o ?? 1) - (A.o ?? 1)) * t;
+      if (entree < 0.999) {
+        const local = Math.min(1, Math.max(0, (entree - p.retard) / 0.5));
+        const k = 1 - Math.pow(1 - local, 3);
+        tmpP.set(camera.position.x * 0.2 + centreX * 0.18 + p.depart.x, centreY * 0.3 + p.depart.y, p.depart.z);
+        p.m.position.lerp(tmpP, 1 - k);
+        tmpQ.copy(p.m.quaternion); p.m.quaternion.copy(p.tourbillon).slerp(tmpQ, k);
+        p.m.scale.multiplyScalar(Math.max(0.001, k));
+        p.m.material.opacity *= Math.min(1, local * 2.5);
+      }
+    }
+    const poids = (k) => Math.max(0, 1 - Math.abs(s - k) * 1.6);
+    fils.material.opacity = poids(2) * 0.85;
+    noeud.material.opacity = poids(2);
+    anneau.material.opacity = Math.max(0, Math.min(1, (s - 3.3) / 0.7));
+    cadre.material.opacity = poids(3);
+    anneau.rotation.z = horloge * 0.05 * calmeIci;
+
+    regard.lerp(pointeur, 0.04);
+    camera.position.x = regard.x * (mobile ? 0.4 : 1.4);
+    camera.position.y = -regard.y * (mobile ? 0.3 : 0.9);
+    camera.lookAt(centreX * 0.18, centreY * 0.3, 0);
+
+    renderer.render(scene, camera);
+
+    for (const e of etiquettes) {
+      const o = poids(e.etat) * fondu * entree;
+      proj.copy(e.point).project(camera);
+      const x = (proj.x * 0.5 + 0.5) * innerWidth, yy = (-proj.y * 0.5 + 0.5) * innerHeight;
+      e.el.style.transform = `translate(${x.toFixed(1)}px, ${yy.toFixed(1)}px) translate(${e.centre ? '-50%' : e.gauche ? 'calc(-100% + 4px)' : '-4px'}, -50%)`;
+      e.el.style.opacity = o.toFixed(3);
+    }
+
+    const c = Math.round(s);
+    if (c !== courant) { courant = c; boutonsIndex.forEach((bt, k) => { if (k === c) bt.setAttribute('aria-current', 'step'); else bt.removeAttribute('aria-current'); }); }
+
+    if (visible) requestAnimationFrame(rendre);
+  }
+  document.addEventListener('visibilitychange', () => { visible = !document.hidden; if (visible) { dernier = performance.now(); requestAnimationFrame(rendre); } });
+  if (capture) {
+    racine.classList.add('capture');
+    renderer.setPixelRatio(1);
+    requestAnimationFrame(rendre);
+  } else requestAnimationFrame(rendre);
+}
+
+</script>
+</body>
+</html>
