@@ -87,6 +87,7 @@ img { display: block; max-width: 100%; height: auto; }
 
 /* ── Le monde en 3D, derrière toute la page ── */
 #monde { position: fixed; inset: 0; width: 100%; height: 100%; z-index: 0; display: block; transition: opacity 600ms ease; }
+#monde { -webkit-mask-image: radial-gradient(ellipse 85% 80% at 58% 50%, #000 55%, rgba(0,0,0,0.55) 100%); mask-image: radial-gradient(ellipse 85% 80% at 58% 50%, #000 55%, rgba(0,0,0,0.55) 100%); }
 .etiquettes { position: fixed; inset: 0; z-index: 1; pointer-events: none; }
 .etiquette {
   position: absolute; left: 0; top: 0; white-space: nowrap; font-size: 0.8125rem; font-weight: 400; letter-spacing: 0.01em;
@@ -336,7 +337,7 @@ main, .index-recit { position: relative; z-index: 2; }
 .pied-page { background: var(--nuit-2); padding: 0 var(--marge) 40px; display: flex; flex-wrap: wrap; justify-content: space-between; gap: 16px; font-size: 0.8125rem; color: var(--creme-doux); }
 .pied-page a { text-underline-offset: 0.25em; }
 
-.capture .barre, .capture main, .capture .index-recit, .capture .intro { display: none !important; }
+.capture .barre, .capture main, .capture .pied-page, .capture .index-recit, .capture .intro { display: none !important; }
 </style>
 </head>
 <body>
@@ -700,107 +701,200 @@ if (renderer) {
 
   /* Les fenêtres : sombres, au trait fin, avec de vrais contenus (un exemple fictif, jamais des barres grises) */
   await Promise.all([document.fonts.load('400 30px Geist'), document.fonts.load('500 30px Geist'), document.fonts.load('400 60px "Instrument Serif"')]).catch(() => {});
-  const C = { fond: '#23201b', fond2: '#312d26', trait: 'rgba(242,239,234,0.22)', texte: '#f3ede1', doux: 'rgba(242,239,234,0.66)', pale: 'rgba(242,239,234,0.4)', or: '#b8964f', orClair: '#d6bd85', vert: '#8fb08a' };
+  const C = { fondHaut: '#2f2b24', fondBas: '#1c1915', fond2: 'rgba(242,239,234,0.07)', fond3: 'rgba(242,239,234,0.12)', trait: 'rgba(242,239,234,0.13)', texte: '#f4f0e9', doux: 'rgba(242,239,234,0.64)', pale: 'rgba(242,239,234,0.4)', or: '#c4a05a', orClair: '#dcc48f', orFond: 'rgba(196,160,90,0.2)', vert: '#9fbf97', vertFond: 'rgba(159,191,151,0.17)', sombre: '#1a1713' };
   const F = (t, poids = 400) => `${poids} ${t}px Geist, system-ui, sans-serif`;
+  const SERIF = (t) => `400 ${t}px "Instrument Serif", Georgia, serif`;
+  const ANISO = renderer.capabilities.getMaxAnisotropy();
+  /* Un texte qui ne tient pas se coupe sur un « … », jamais par-dessus son voisin */
+  const ajuste = (g, txt, max) => { if (g.measureText(txt).width <= max) return txt; let s = txt; while (s.length > 1 && g.measureText(s + '…').width > max) s = s.slice(0, -1); return s.trimEnd() + '…'; };
+  const pilule = (g, x, y, txt, coul, fond, taille = 28, droite = false) => {
+    g.font = F(taille, 500); const w = g.measureText(txt).width + taille * 1.3, hh = taille * 1.75;
+    const x0 = droite ? x - w : x; g.fillStyle = fond; g.beginPath(); g.roundRect(x0, y - hh / 2, w, hh, hh / 2); g.fill();
+    g.fillStyle = coul; g.textBaseline = 'middle'; g.fillText(txt, x0 + taille * 0.65, y + 1); return w;
+  };
   function fenetre(l, h, titre, meta, dessin, opts = {}) {
-    const W = 1024, H = Math.round(1024 * h / l), r = opts.rayon ?? 34;
+    const W = 1024, H = Math.round(W * h / l), r = opts.rayon ?? 40;
     const c = document.createElement('canvas'); c.width = W; c.height = H;
     const g = c.getContext('2d');
-    g.beginPath(); g.roundRect(3, 3, W - 6, H - 6, r); g.fillStyle = opts.fond || C.fond; g.fill();
-    g.save(); g.clip();
+    /* Le dessin couvre la carte jusqu'à son bord exact : la géométrie découpe le contour, aucun pixel transparent ne la frange */
+    const forme = (m = 0, rr = r) => { g.beginPath(); g.roundRect(m, m, W - 2 * m, H - 2 * m, Math.max(0, rr - m)); };
+    /* Le fond : un dégradé de haut en bas, et une lueur chaude qui vient d'en haut à gauche */
+    const fd = g.createLinearGradient(0, 0, 0, H); fd.addColorStop(0, opts.fondHaut || C.fondHaut); fd.addColorStop(1, opts.fondBas || C.fondBas);
+    forme(); g.fillStyle = fd; g.fill();
+    g.save(); forme(); g.clip();
+    const lu = g.createRadialGradient(W * 0.12, -H * 0.1, 0, W * 0.12, -H * 0.1, Math.max(W, H) * 0.95);
+    lu.addColorStop(0, opts.lueur || 'rgba(220,196,143,0.13)'); lu.addColorStop(1, 'rgba(220,196,143,0)'); g.fillStyle = lu; g.fillRect(0, 0, W, H);
+    g.textBaseline = 'middle'; g.textAlign = 'left';
     if (titre) {
-      g.fillStyle = C.texte; g.font = F(34, 500); g.textBaseline = 'middle'; g.fillText(titre, 48, 62);
-      if (meta) { g.fillStyle = C.doux; g.font = F(28); g.textAlign = 'right'; g.fillText(meta, W - 48, 62); g.textAlign = 'left'; }
-      g.fillStyle = C.trait; g.fillRect(0, 112, W, 2);
+      g.fillStyle = C.texte; g.font = F(50, 500); g.fillText(titre, 56, 88);
+      if (meta) pilule(g, W - 56, 88, meta, C.doux, C.fond2, 34, true);
+      g.fillStyle = C.trait; g.fillRect(0, 164, W, 2);
     }
+    g.textBaseline = 'middle'; g.textAlign = 'left';
     dessin(g, W, H);
     g.restore();
-    g.lineWidth = 4; g.strokeStyle = opts.bord || 'rgba(242,239,234,0.42)'; g.beginPath(); g.roundRect(3, 3, W - 6, H - 6, r); g.stroke();
-    const t = new THREE.CanvasTexture(c); t.colorSpace = THREE.SRGBColorSpace; t.anisotropy = 8;
-    return { t, l, h };
+    /* L'arête : claire en haut, où elle prend la lumière, éteinte en bas ; un reflet fin juste dessous */
+    const ar = g.createLinearGradient(0, 0, 0, H); ar.addColorStop(0, opts.bordHaut || 'rgba(242,239,234,0.48)'); ar.addColorStop(0.5, opts.bordMilieu || 'rgba(242,239,234,0.22)'); ar.addColorStop(1, opts.bordBas || 'rgba(242,239,234,0.12)');
+    g.lineWidth = 5; g.strokeStyle = ar; forme(2.5); g.stroke();
+    const re = g.createLinearGradient(0, 0, 0, Math.min(H, 260)); re.addColorStop(0, 'rgba(255,255,255,0.07)'); re.addColorStop(1, 'rgba(255,255,255,0)');
+    g.save(); forme(); g.clip(); g.lineWidth = 2; g.strokeStyle = re; forme(7); g.stroke(); g.restore();
+    const t = new THREE.CanvasTexture(c); t.colorSpace = THREE.SRGBColorSpace; t.anisotropy = ANISO;
+    return { t, l, h, r };
   }
-  const pastille = (g, x, y, txt, coul, fond) => { g.font = F(26, 500); const w = g.measureText(txt).width + 36; g.fillStyle = fond; g.beginPath(); g.roundRect(x - w, y - 22, w, 44, 22); g.fill(); g.fillStyle = coul; g.textBaseline = 'middle'; g.fillText(txt, x - w + 18, y + 1); };
-  const ligne = (g, x, y, a, b, coulA = C.texte, coulB = C.doux) => { g.textBaseline = 'middle'; g.font = F(30); g.fillStyle = coulA; g.fillText(a, x, y); if (b) { g.font = F(24); g.fillStyle = coulB; g.fillText(b, x, y + 36); } };
 
   const modeles = [
-    fenetre(1.7, 1.06, 'Planning', 'Semaine 43', (g, W, H) => {
-      const jours = ['Lun.', 'Mar.', 'Mer.', 'Jeu.', 'Ven.']; const lc = (W - 96) / 5;
-      jours.forEach((j, k) => { g.fillStyle = C.doux; g.font = F(26); g.fillText(j, 48 + k * lc, 160); if (k) { g.fillStyle = C.trait; g.fillRect(48 + k * lc - 10, 190, 2, H - 230); } });
-      [[0, 0, 2, 'Pose cuisine Leca', C.or], [1, 2, 1, 'Atelier', 'rgba(242,239,234,0.14)'], [2, 0, 1, 'Livraison Roux', 'rgba(143,176,138,0.35)'], [3, 1, 2, 'Visite Borély', 'rgba(242,239,234,0.14)'], [4, 0, 1, 'Facturation', 'rgba(184,150,79,0.4)']].forEach(([k, y, d, txt, coul]) => {
-        g.fillStyle = coul; g.beginPath(); g.roundRect(48 + k * lc, 205 + y * 130, lc - 22, d * 120, 14); g.fill();
-        g.fillStyle = coul === C.or ? C.fond : C.texte; g.font = F(24, 500); g.fillText(txt.length > 14 ? txt.slice(0, 13) + '…' : txt, 62 + k * lc, 240 + y * 130);
+    fenetre(1.7, 1.06, 'Planning', 'Sem. 43', (g, W, H) => {
+      const jours = ['Lun.', 'Mar.', 'Mer.', 'Jeu.'], lc = (W - 112) / 4;
+      jours.forEach((j, k) => { g.fillStyle = k === 2 ? C.orClair : C.doux; g.font = F(36, k === 2 ? 500 : 400); g.fillText(j, 56 + k * lc, 222); if (k) { g.fillStyle = C.trait; g.fillRect(56 + k * lc - 12, 256, 2, H - 290); } });
+      [[0, 0, 2, 'Pose', 'or'], [1, 1, 1, 'Atelier', 'neutre'], [2, 0, 1, 'Achats', 'vert'], [3, 0, 2, 'Visite', 'orPale'], [1, 0, 1, 'Devis', 'neutre']].forEach(([k, y, d, txt, ton]) => {
+        const x = 56 + k * lc, yy = 270 + y * 172, w = lc - 26, hh = d * 172 - 18;
+        g.fillStyle = { or: C.or, neutre: C.fond3, vert: C.vertFond, orPale: C.orFond }[ton]; g.beginPath(); g.roundRect(x, yy, w, hh, 20); g.fill();
+        if (ton !== 'or') { g.fillStyle = ton === 'vert' ? C.vert : ton === 'orPale' ? C.or : C.pale; g.beginPath(); g.roundRect(x, yy, 9, hh, [20, 0, 0, 20]); g.fill(); }
+        g.fillStyle = ton === 'or' ? C.sombre : C.texte; g.font = F(38, 500); g.fillText(ajuste(g, txt, w - 44), x + 28, yy + 50);
       });
     }),
     fenetre(1.5, 1.0, 'Chiffre d’affaires', '6 mois', (g, W, H) => {
-      const v = [0.42, 0.55, 0.38, 0.22, 0.66, 0.84], x0 = 70, l = W - 140, y0 = H - 110, ht = H - 300;
-      for (let k = 0; k < 4; k++) { g.fillStyle = C.trait; g.fillRect(x0, y0 - k * ht / 3, l, 2); }
-      g.beginPath(); v.forEach((a, k) => { const x = x0 + k * l / 5, y = y0 - a * ht; k ? g.lineTo(x, y) : g.moveTo(x, y); }); g.strokeStyle = C.or; g.lineWidth = 6; g.lineJoin = 'round'; g.stroke();
-      v.forEach((a, k) => { g.fillStyle = k === 5 ? C.orClair : C.or; g.beginPath(); g.arc(x0 + k * l / 5, y0 - a * ht, k === 5 ? 13 : 8, 0, 7); g.fill(); g.fillStyle = C.doux; g.font = F(24); g.fillText(['mai', 'juin', 'juil.', 'août', 'sept.', 'oct.'][k], x0 + k * l / 5 - 22, y0 + 50); });
-      g.fillStyle = C.texte; g.font = '400 92px "Instrument Serif", Georgia, serif'; g.fillText('+ 18 %', 70, 200);
+      g.fillStyle = C.texte; g.font = SERIF(176); g.textBaseline = 'alphabetic'; g.fillText('+ 18 %', 50, 346); g.textBaseline = 'middle';
+      const v = [0.3, 0.48, 0.34, 0.18, 0.6, 0.9], x0 = 64, l = W - 128, y0 = H - 70, ht = H - 470;
+      const pt = (k) => [x0 + k * l / 5, y0 - v[k] * ht];
+      const aire = g.createLinearGradient(0, y0 - ht, 0, y0); aire.addColorStop(0, 'rgba(196,160,90,0.5)'); aire.addColorStop(1, 'rgba(196,160,90,0)');
+      g.beginPath(); g.moveTo(x0, y0); v.forEach((_, k) => g.lineTo(...pt(k))); g.lineTo(x0 + l, y0); g.closePath(); g.fillStyle = aire; g.fill();
+      g.beginPath(); v.forEach((_, k) => k ? g.lineTo(...pt(k)) : g.moveTo(...pt(k))); g.strokeStyle = C.or; g.lineWidth = 9; g.lineJoin = 'round'; g.lineCap = 'round'; g.stroke();
+      const [xd, yd] = pt(5); g.fillStyle = 'rgba(220,196,143,0.28)'; g.beginPath(); g.arc(xd, yd, 32, 0, 7); g.fill(); g.fillStyle = C.orClair; g.beginPath(); g.arc(xd, yd, 15, 0, 7); g.fill();
     }),
     fenetre(1.5, 1.05, 'Équipe chantier', '3 en ligne', (g, W, H) => {
-      const bulles = [[0, 'Qui a les cotes de la cuisine ?', 'Karim · 7 h 42'], [1, 'Dans le dossier Leca, onglet Plans.', 'Vous · 7 h 44'], [0, 'Trouvé, merci.', 'Karim · 7 h 46']];
-      bulles.forEach(([moi, t, m], k) => { g.font = F(28); const w = g.measureText(t).width + 56; const x = moi ? W - 48 - w : 48, y = 160 + k * 150; g.fillStyle = moi ? 'rgba(184,150,79,0.9)' : C.fond2; g.beginPath(); g.roundRect(x, y, w, 76, 30); g.fill(); g.fillStyle = moi ? C.fond : C.texte; g.textBaseline = 'middle'; g.fillText(t, x + 28, y + 38); g.fillStyle = C.pale; g.font = F(22); g.fillText(m, moi ? x + w - g.measureText(m).width : x + 6, y + 104); });
+      [[0, 'Les cotes de la cuisine ?'], [1, 'Dossier Leca, onglet Plans.'], [0, 'Trouvé, merci !']].forEach(([moi, t], k) => {
+        g.font = F(40, moi ? 500 : 400); const w = Math.min(W - 150, g.measureText(t).width + 76), x = moi ? W - 56 - w : 56, y = 196 + k * 168;
+        g.fillStyle = moi ? C.or : C.fond3; g.beginPath(); g.roundRect(x, y, w, 112, [44, 44, moi ? 10 : 44, moi ? 44 : 10]); g.fill();
+        g.fillStyle = moi ? C.sombre : C.texte; g.fillText(ajuste(g, t, w - 76), x + 38, y + 58);
+      });
     }),
     fenetre(0.74, 1.5, null, null, (g, W, H) => {
-      g.fillStyle = C.pale; g.beginPath(); g.roundRect(W / 2 - 90, 40, 180, 40, 20); g.fill();
-      g.fillStyle = C.texte; g.font = '400 92px "Instrument Serif", Georgia, serif'; g.fillText('Prospects', 64, 220);
-      [['Martin SARL', 'Marseille 8e', 'Relancer', C.or], ['M. Roux', 'Aubagne', 'Signé', C.vert], ['Mme Leca', 'Cassis', 'Posé', C.vert], ['Café Borély', 'Marseille 8e', 'Jeudi', C.orClair], ['SCI Goudes', 'Marseille 8e', 'Devis', C.orClair]].forEach(([n, v, s, c], k) => {
-        const y = 330 + k * 230; g.fillStyle = C.fond2; g.beginPath(); g.roundRect(48, y, W - 96, 190, 28); g.fill(); ligne(g, 88, y + 70, n, v); g.font = F(26, 500); g.fillStyle = c; g.textAlign = 'right'; g.fillText(s, W - 90, y + 70); g.textAlign = 'left';
+      g.fillStyle = C.fond3; g.beginPath(); g.roundRect(W / 2 - 120, 48, 240, 52, 26); g.fill();
+      g.fillStyle = C.texte; g.font = SERIF(176); g.textBaseline = 'alphabetic'; g.fillText('Prospects', 60, 330); g.textBaseline = 'middle';
+      [['Martin SARL', 'Relancer', C.sombre, C.or], ['M. Roux', 'Signé', C.vert, C.vertFond], ['Café Borély', 'Jeudi', C.orClair, C.orFond], ['SCI Goudes', 'Devis', C.orClair, C.orFond]].forEach(([n, s, c, f], k) => {
+        const y = 430 + k * 400; g.fillStyle = C.fond2; g.beginPath(); g.roundRect(48, y, W - 96, 350, 44); g.fill();
+        g.fillStyle = C.texte; g.font = F(70, 500); g.fillText(ajuste(g, n, W - 200), 104, y + 112);
+        pilule(g, 104, y + 240, s, c, f, 54);
       });
-    }, { rayon: 90 }),
-    fenetre(1.6, 1.05, 'Devis D-2026-042', 'SCI Les Goudes', (g, W, H) => {
-      [['Fournitures, plan chêne', '1 140,00'], ['Main-d’œuvre, 2 jours', '1 170,00'], ['Dépose et évacuation', '180,00']].forEach(([a, b], k) => { const y = 180 + k * 74; g.font = F(30); g.fillStyle = C.texte; g.fillText(a, 48, y); g.textAlign = 'right'; g.fillStyle = C.doux; g.fillText(b + ' €', W - 48, y); g.textAlign = 'left'; g.fillStyle = C.trait; g.fillRect(48, y + 36, W - 96, 2); });
-      g.fillStyle = C.doux; g.font = F(28); g.fillText('Total HT', 48, H - 90); g.textAlign = 'right'; g.fillStyle = C.orClair; g.font = '400 84px "Instrument Serif", Georgia, serif'; g.fillText('2 490,00 €', W - 48, H - 80); g.textAlign = 'left';
+    }, { rayon: 110 }),
+    fenetre(1.6, 1.05, 'Devis D-042', 'Envoyé', (g, W, H) => {
+      [['Plan chêne', '1 140 €'], ['Main-d’œuvre', '1 170 €'], ['Dépose', '180 €']].forEach(([a, b], k) => {
+        const y = 222 + k * 90; g.font = F(40); g.fillStyle = C.texte; g.fillText(a, 56, y); g.textAlign = 'right'; g.fillStyle = C.doux; g.fillText(b, W - 56, y); g.textAlign = 'left';
+        g.fillStyle = C.trait; g.fillRect(56, y + 45, W - 112, 2);
+      });
+      g.fillStyle = C.doux; g.font = F(38); g.fillText('Total HT', 56, H - 90);
+      g.textAlign = 'right'; g.fillStyle = C.orClair; g.font = SERIF(150); g.textBaseline = 'alphabetic'; g.fillText('2 490 €', W - 56, H - 46); g.textAlign = 'left'; g.textBaseline = 'middle';
     }),
     fenetre(1.45, 0.46, null, null, (g, W, H) => {
-      g.fillStyle = C.or; g.beginPath(); g.arc(90, H / 2, 40, 0, 7); g.fill();
-      g.strokeStyle = C.fond; g.lineWidth = 8; g.beginPath(); g.moveTo(70, H / 2); g.lineTo(86, H / 2 + 16); g.lineTo(112, H / 2 - 14); g.stroke();
-      ligne(g, 160, H / 2 - 18, 'Facture F-2026-087 payée', 'Mme Leca · 1 980,00 €');
-    }, { rayon: 60 }),
+      g.fillStyle = C.or; g.beginPath(); g.arc(130, H / 2, 74, 0, 7); g.fill();
+      g.strokeStyle = C.sombre; g.lineWidth = 13; g.lineCap = 'round'; g.lineJoin = 'round'; g.beginPath(); g.moveTo(96, H / 2 + 2); g.lineTo(121, H / 2 + 27); g.lineTo(166, H / 2 - 24); g.stroke();
+      g.fillStyle = C.texte; g.font = F(56, 500); g.fillText('Facture payée', 246, H / 2 - 34);
+      g.fillStyle = C.doux; g.font = F(44); g.fillText('Mme Leca · 1 980 €', 246, H / 2 + 40);
+    }, { rayon: 80 }),
     fenetre(0.95, 0.95, null, null, (g, W, H) => {
-      const cx = W / 2, cy = H / 2 - 20, r = 300;
-      g.lineWidth = 26; g.strokeStyle = C.fond2; g.beginPath(); g.arc(cx, cy, r, 0, 7); g.stroke();
-      g.strokeStyle = C.or; g.lineCap = 'round'; g.beginPath(); g.arc(cx, cy, r, -Math.PI / 2, -Math.PI / 2 + Math.PI * 2 * 0.72); g.stroke();
-      g.fillStyle = C.texte; g.textAlign = 'center'; g.font = '400 210px "Instrument Serif", Georgia, serif'; g.textBaseline = 'middle'; g.fillText('72 %', cx, cy);
-      g.font = F(30); g.fillStyle = C.doux; g.fillText('Planning rempli', cx, H - 90); g.textAlign = 'left';
-    }, { rayon: 60 }),
-    fenetre(1.7, 1.0, 'Suivi des chantiers', '6 en cours', (g, W, H) => {
-      const cols = ['À faire', 'En cours', 'Terminé'], lc = (W - 96) / 3;
-      cols.forEach((t, k) => { g.fillStyle = C.doux; g.font = F(26); g.fillText(t, 48 + k * lc, 160); });
-      [[0, 0, 'Café Borély'], [0, 1, 'SCI Goudes'], [1, 0, 'Cuisine Leca'], [1, 1, 'Escalier Roux'], [2, 0, 'Dressing Ferri']].forEach(([k, y, t]) => {
-        g.fillStyle = k === 1 ? 'rgba(184,150,79,0.22)' : C.fond2; g.beginPath(); g.roundRect(48 + k * lc, 200 + y * 120, lc - 24, 100, 18); g.fill();
-        g.fillStyle = C.texte; g.font = F(26, 500); g.fillText(t, 70 + k * lc, 252 + y * 120);
+      const cx = W / 2, cy = H / 2 - 44, r = 290;
+      g.lineWidth = 46; g.strokeStyle = C.fond3; g.beginPath(); g.arc(cx, cy, r, 0, 7); g.stroke();
+      const an = g.createLinearGradient(cx - r, cy - r, cx + r, cy + r); an.addColorStop(0, C.orClair); an.addColorStop(1, C.or);
+      g.strokeStyle = an; g.lineCap = 'round'; g.beginPath(); g.arc(cx, cy, r, -Math.PI / 2, -Math.PI / 2 + Math.PI * 2 * 0.72); g.stroke();
+      g.fillStyle = C.texte; g.textAlign = 'center'; g.font = SERIF(240); g.fillText('72 %', cx, cy + 8);
+      g.font = F(52); g.fillStyle = C.doux; g.fillText('Planning rempli', cx, H - 92); g.textAlign = 'left';
+    }, { rayon: 80 }),
+    fenetre(1.7, 1.0, 'Chantiers', '5 en cours', (g, W, H) => {
+      const cols = ['À faire', 'En cours', 'Terminé'], lc = (W - 112) / 3;
+      cols.forEach((t, k) => { g.fillStyle = C.doux; g.font = F(36); g.fillText(t, 56 + k * lc, 222); });
+      [[0, 0, 'Borély'], [0, 1, 'Goudes'], [1, 0, 'Leca'], [1, 1, 'Roux'], [2, 0, 'Ferri']].forEach(([k, y, t]) => {
+        const x = 56 + k * lc, yy = 262 + y * 158, w = lc - 26;
+        g.fillStyle = k === 1 ? C.orFond : C.fond2; g.beginPath(); g.roundRect(x, yy, w, 136, 24); g.fill();
+        g.fillStyle = [C.pale, C.or, C.vert][k]; g.beginPath(); g.arc(x + 40, yy + 68, 12, 0, 7); g.fill();
+        g.fillStyle = C.texte; g.font = F(40, 500); g.fillText(ajuste(g, t, w - 96), x + 72, yy + 70);
       });
     }),
-    fenetre(1.55, 1.0, 'Bon d’intervention', 'Chantier Leca', (g, W, H) => {
-      [['Client', 'Mme Leca, Cassis'], ['Travaux', 'Pose cuisine'], ['Temps', '6 h 30, 2 pers.']].forEach(([a, b], k) => { g.font = F(24); g.fillStyle = C.doux; g.fillText(a, 48, 172 + k * 62); g.font = F(28); g.fillStyle = C.texte; g.fillText(b, 260, 172 + k * 62); });
-      g.fillStyle = C.fond2; g.beginPath(); g.roundRect(48, 360, W - 96, H - 410, 20); g.fill();
-      g.strokeStyle = C.orClair; g.lineWidth = 5; g.lineCap = 'round'; g.beginPath(); g.moveTo(110, H - 110); g.bezierCurveTo(170, H - 210, 220, H - 210, 230, H - 120); g.bezierCurveTo(250, H - 70, 320, H - 170, 380, H - 140); g.bezierCurveTo(430, H - 110, 470, H - 180, 560, H - 130); g.stroke();
-      g.fillStyle = C.pale; g.font = F(22); g.fillText('Signature du client', 76, 395);
+    fenetre(1.55, 1.0, 'Intervention', 'Signé', (g, W, H) => {
+      [['Client', 'Mme Leca'], ['Durée', '6 h 30']].forEach(([a, b], k) => { const y = 226 + k * 76; g.font = F(38); g.fillStyle = C.doux; g.fillText(a, 56, y); g.font = F(42, 500); g.fillStyle = C.texte; g.fillText(b, 300, y); });
+      g.fillStyle = C.fond2; g.beginPath(); g.roundRect(56, 352, W - 112, H - 400, 28); g.fill();
+      g.strokeStyle = C.orClair; g.lineWidth = 9; g.lineCap = 'round'; g.beginPath(); g.moveTo(130, H - 92); g.bezierCurveTo(200, H - 230, 260, H - 230, 272, H - 110); g.bezierCurveTo(296, H - 46, 380, H - 170, 450, H - 134); g.bezierCurveTo(510, H - 100, 560, H - 186, 690, H - 120); g.stroke();
     }),
     fenetre(1.6, 1.0, 'Clients', '42 fiches', (g, W, H) => {
-      [['ML', 'Mme Leca', 'Cassis'], ['MR', 'M. Roux', 'Aubagne'], ['CB', 'Café Borély', 'Marseille 8e']].forEach(([i, n, v], k) => {
-        const y = 190 + k * 130; g.fillStyle = k === 0 ? C.or : C.fond2; g.beginPath(); g.arc(96, y + 18, 44, 0, 7); g.fill();
-        g.fillStyle = k === 0 ? C.fond : C.texte; g.font = F(28, 500); g.textAlign = 'center'; g.textBaseline = 'middle'; g.fillText(i, 96, y + 19); g.textAlign = 'left';
-        ligne(g, 170, y, n, v);
+      [['ML', 'Mme Leca', 'À jour'], ['MR', 'M. Roux', 'Devis'], ['CB', 'Café Borély', 'Relance']].forEach(([i, n, s], k) => {
+        const y = 236 + k * 140; g.fillStyle = k === 0 ? C.or : C.fond3; g.beginPath(); g.arc(116, y, 54, 0, 7); g.fill();
+        g.fillStyle = k === 0 ? C.sombre : C.texte; g.font = F(36, 500); g.textAlign = 'center'; g.fillText(i, 116, y + 1); g.textAlign = 'left';
+        g.fillStyle = C.texte; g.font = F(44, 500); g.fillText(n, 206, y);
+        pilule(g, W - 56, y, s, k === 0 ? C.vert : C.orClair, k === 0 ? C.vertFond : C.orFond, 34, true);
+        if (k < 2) { g.fillStyle = C.trait; g.fillRect(56, y + 70, W - 112, 2); }
       });
     }),
     fenetre(1.5, 1.0, null, null, (g, W, H) => {
-      g.fillStyle = C.doux; g.font = F(28); g.fillText('Encaissé en octobre', 56, 110);
-      g.fillStyle = C.texte; g.font = '400 190px "Instrument Serif", Georgia, serif'; g.textBaseline = 'alphabetic'; g.fillText('18 420 €', 50, 330);
-      g.fillStyle = C.trait; g.fillRect(56, 400, W - 112, 2);
-      g.textBaseline = 'middle'; g.font = F(28); g.fillStyle = C.doux; g.fillText('À encaisser', 56, 470); g.fillText('En retard', W / 2, 470);
-      g.fillStyle = C.orClair; g.font = '400 84px "Instrument Serif", Georgia, serif'; g.fillText('4 260 €', 56, 560); g.fillStyle = C.texte; g.fillText('0', W / 2, 560);
-    }, { fond: '#2a261f', bord: 'rgba(214,189,133,0.8)' }),
-    fenetre(1.6, 1.0, 'Messagerie', '3 non lus', (g, W, H) => {
-      [['Bois du Midi', 'Commande 4471 expédiée', '9 h 12'], ['Mme Leca', 'Merci pour la pose, tout est parfait.', '8 h 40'], ['Expert-comptable', 'Pièces d’octobre bien reçues.', 'Hier']].forEach(([a, b, h], k) => {
-        const y = 175 + k * 120; if (k < 2) { g.fillStyle = C.or; g.beginPath(); g.arc(62, y, 9, 0, 7); g.fill(); }
-        ligne(g, 92, y, a, b); g.font = F(24); g.fillStyle = C.pale; g.textAlign = 'right'; g.fillText(h, W - 48, y); g.textAlign = 'left';
+      g.fillStyle = C.doux; g.font = F(40); g.fillText('Encaissé en octobre', 60, 104);
+      g.fillStyle = C.texte; g.font = SERIF(220); g.textBaseline = 'alphabetic'; g.fillText('18 420 €', 50, 340); g.textBaseline = 'middle';
+      g.fillStyle = C.trait; g.fillRect(60, 398, W - 120, 2);
+      g.font = F(36); g.fillStyle = C.doux; g.fillText('À encaisser', 60, 462); g.fillText('En retard', W * 0.56, 462);
+      g.font = SERIF(110); g.textBaseline = 'alphabetic'; g.fillStyle = C.orClair; g.fillText('4 260 €', 56, 586); g.fillStyle = C.texte; g.fillText('0', W * 0.56, 586); g.textBaseline = 'middle';
+      g.fillStyle = C.fond3; g.beginPath(); g.roundRect(60, H - 58, W - 120, 18, 9); g.fill();
+      g.fillStyle = C.or; g.beginPath(); g.roundRect(60, H - 58, (W - 120) * 0.81, 18, 9); g.fill();
+    }, { fondHaut: '#362f24', fondBas: '#201c16', bordHaut: 'rgba(220,196,143,0.95)', bordMilieu: 'rgba(196,160,90,0.55)', bordBas: 'rgba(196,160,90,0.32)', lueur: 'rgba(220,196,143,0.22)' }),
+    fenetre(1.6, 1.0, 'Messages', '2 non lus', (g, W, H) => {
+      [['Bois du Midi', 'Commande expédiée', 1], ['Mme Leca', 'Merci, tout est parfait.', 1], ['Comptable', 'Pièces bien reçues.', 0]].forEach(([a, b, nl], k) => {
+        const y = 236 + k * 142;
+        if (nl) { g.fillStyle = C.or; g.beginPath(); g.arc(74, y - 24, 12, 0, 7); g.fill(); }
+        g.fillStyle = C.texte; g.font = F(42, nl ? 500 : 400); g.fillText(a, 104, y - 24);
+        g.fillStyle = C.doux; g.font = F(36); g.fillText(ajuste(g, b, W - 170), 104, y + 28);
+        if (k < 2) { g.fillStyle = C.trait; g.fillRect(56, y + 72, W - 112, 2); }
       });
     }),
   ];
 
+  /* La matière d'une carte. Sa face se lit un demi-niveau de détail plus fin que ce que la carte graphique choisirait
+     (le texte reste net en se réduisant), sauf loin du point de netteté, où elle s'adoucit comme dans une profondeur de
+     champ ; un reflet glisse sur la surface quand la carte tourne. */
+  const matiereFace = (mat) => {
+    mat.userData.u = { uFlou: { value: 0 }, uReflet: { value: 0 }, uBande: { value: 0 } };
+    mat.onBeforeCompile = (sh) => {
+      Object.assign(sh.uniforms, mat.userData.u);
+      sh.fragmentShader = 'uniform float uFlou;\nuniform float uReflet;\nuniform float uBande;\n' + sh.fragmentShader.replace('#include <map_fragment>', [
+        '#ifdef USE_MAP',
+        '  vec4 echantillon = texture2D( map, vMapUv, mix( -0.65, 1.8, uFlou ) );',
+        '  diffuseColor *= echantillon;',
+        '  float ecart = vMapUv.x * 0.7 + vMapUv.y - uBande;',
+        '  diffuseColor.rgb += vec3( 1.0, 0.92, 0.78 ) * exp( -ecart * ecart * 14.0 ) * uReflet * echantillon.a;',
+        '#endif'].join('\n'));
+    };
+    mat.customProgramCacheKey = () => 'carte-face';
+  };
+  /* Une lumière douce vient d'en haut à gauche : une carte qui s'en détourne s'assombrit, et le volume se lit */
+  const LUMIERE = new THREE.Vector3(-0.35, 0.55, 0.76).normalize(), normale = new THREE.Vector3(), versCamera = new THREE.Vector3();
+  const EPAISSEUR = 0.007;
+  /* Le contour arrondi d'une carte, au rayon même de son dessin : le bord est une vraie arête, nette, pas un détourage */
+  const contour = (l, h, r) => {
+    const s = new THREE.Shape(), x = -l / 2, y = -h / 2;
+    s.moveTo(x + r, y); s.lineTo(x + l - r, y); s.absarc(x + l - r, y + r, r, -Math.PI / 2, 0);
+    s.lineTo(x + l, y + h - r); s.absarc(x + l - r, y + h - r, r, 0, Math.PI / 2);
+    s.lineTo(x + r, y + h); s.absarc(x + r, y + h - r, r, Math.PI / 2, Math.PI);
+    s.lineTo(x, y + r); s.absarc(x + r, y + r, r, Math.PI, Math.PI * 1.5);
+    return s;
+  };
+  const versUv = (geo, l, h) => { const p = geo.attributes.position, uv = geo.attributes.uv; for (let k = 0; k < p.count; k++) uv.setXY(k, (p.getX(k) + l / 2) / l, (p.getY(k) + h / 2) / h); };
+  /* Le dos : sombre, avec le monogramme JD au centre */
+  const texDos = (l, h, r) => {
+    const W = 512, H = Math.round(W * h / l), c = document.createElement('canvas'); c.width = W; c.height = H; const g = c.getContext('2d');
+    const fd = g.createLinearGradient(0, 0, W, H); fd.addColorStop(0, '#2a251e'); fd.addColorStop(1, '#16130f'); g.fillStyle = fd; g.fillRect(0, 0, W, H);
+    const m = Math.min(W, H) * 0.16; g.strokeStyle = 'rgba(214,189,133,0.42)'; g.lineWidth = 2.5; g.beginPath(); g.arc(W / 2, H / 2, m, 0, 7); g.stroke();
+    g.fillStyle = 'rgba(214,189,133,0.5)'; g.font = `400 ${Math.round(m * 0.95)}px "Instrument Serif", Georgia, serif`; g.textAlign = 'center'; g.textBaseline = 'middle'; g.fillText('JD', W / 2, H / 2 + m * 0.06);
+    const t = new THREE.CanvasTexture(c); t.colorSpace = THREE.SRGBColorSpace; t.anisotropy = ANISO; return t;
+  };
+  /* Chaque modèle prépare une fois sa face, son dos et sa tranche ; les cartes les partagent */
+  const formes = modeles.map((mod) => {
+    const r = mod.r * mod.l / 1024, s = contour(mod.l, mod.h, r);
+    const face = new THREE.ShapeGeometry(s, 10); versUv(face, mod.l, mod.h);
+    const dos = face.clone(); dos.rotateY(Math.PI); dos.translate(0, 0, -EPAISSEUR);
+    const pts = s.getPoints(10), sommets = [];
+    for (let k = 0; k < pts.length; k++) {
+      const a = pts[k], b = pts[(k + 1) % pts.length];
+      sommets.push(a.x, a.y, 0, b.x, b.y, 0, b.x, b.y, -EPAISSEUR, a.x, a.y, 0, b.x, b.y, -EPAISSEUR, a.x, a.y, -EPAISSEUR);
+    }
+    const tranche = new THREE.BufferGeometry(); tranche.setAttribute('position', new THREE.Float32BufferAttribute(sommets, 3));
+    return { face, dos, tranche, texDos: texDos(mod.l, mod.h) };
+  });
   const N = mobile ? 64 : 120;
   const panneaux = [];
   const alea = (() => { let s = 7; return () => { s = (s * 16807) % 2147483647; return (s - 1) / 2147483646; }; })();
@@ -809,14 +903,32 @@ if (renderer) {
   const ECART = mobile ? 1.5 : 2.4, PAS = mobile ? 0.3 : 0.36, RAYON = mobile ? 2.5 : 4.0, R_ANNEAU = mobile ? 2.6 : 4.5;
 
   for (let i = 0; i < N; i++) {
-    const mod = modeles[i % modeles.length];
-    const mat = new THREE.MeshBasicMaterial({ map: mod.t, transparent: true, side: THREE.DoubleSide, opacity: 1, fog: true });
-    const m = new THREE.Mesh(new THREE.PlaneGeometry(mod.l, mod.h), mat);
+    const k = i % modeles.length, mod = modeles[k], fo = formes[k];
+    const matFace = new THREE.MeshBasicMaterial({ map: mod.t, transparent: true, opacity: 1, fog: true });
+    matiereFace(matFace);
+    const matDos = new THREE.MeshBasicMaterial({ map: fo.texDos, transparent: true, opacity: 1, fog: true });
+    const matTranche = new THREE.MeshBasicMaterial({ color: 0x4a4134, transparent: true, opacity: 1, fog: true, side: THREE.DoubleSide });
+    const m = new THREE.Group();
+    m.add(new THREE.Mesh(fo.face, matFace), new THREE.Mesh(fo.dos, matDos), new THREE.Mesh(fo.tranche, matTranche));
     scene.add(m);
-    panneaux.push({ m, mod, phase: alea() * Math.PI * 2, vitesse: 0.3 + alea() * 0.5, etats: [], retard: alea() * 0.5,
+    panneaux.push({ m, mod, mats: [matFace, matDos, matTranche], face: matFace, tranche: matTranche, phase: alea() * Math.PI * 2, vitesse: 0.3 + alea() * 0.5, etats: [], retard: alea() * 0.5,
       tourbillon: new THREE.Quaternion().setFromEuler(new THREE.Euler((alea() - 0.5) * 6, (alea() - 0.5) * 6, (alea() - 0.5) * 6)),
       depart: new THREE.Vector3((alea() - 0.5) * 0.6, (alea() - 0.5) * 0.4, 4 + alea() * 2) });
   }
+
+  /* Une poussière d'or en suspension, à peine visible, qui donne de la profondeur au vide */
+  const poussiere = (() => {
+    /* Sa propre suite de tirages : la disposition des cartes ne bouge pas */
+    const alea = (() => { let s = 11; return () => { s = (s * 16807) % 2147483647; return (s - 1) / 2147483646; }; })();
+    const n = mobile ? 110 : 260, pos = new Float32Array(n * 3);
+    for (let k = 0; k < n; k++) { pos[k * 3] = (alea() - 0.5) * 34; pos[k * 3 + 1] = (alea() - 0.5) * 22; pos[k * 3 + 2] = -16 + alea() * 24; }
+    const geo = new THREE.BufferGeometry(); geo.setAttribute('position', new THREE.BufferAttribute(pos, 3));
+    const c = document.createElement('canvas'); c.width = c.height = 64; const g = c.getContext('2d');
+    const rg = g.createRadialGradient(32, 32, 0, 32, 32, 32); rg.addColorStop(0, 'rgba(236,214,160,1)'); rg.addColorStop(0.35, 'rgba(214,189,133,0.45)'); rg.addColorStop(1, 'rgba(214,189,133,0)'); g.fillStyle = rg; g.fillRect(0, 0, 64, 64);
+    const tex = new THREE.CanvasTexture(c); tex.colorSpace = THREE.SRGBColorSpace;
+    const pts = new THREE.Points(geo, new THREE.PointsMaterial({ map: tex, size: mobile ? 0.09 : 0.075, sizeAttenuation: true, transparent: true, opacity: 0.55, depthWrite: false, blending: THREE.AdditiveBlending, fog: true }));
+    scene.add(pts); return pts;
+  })();
 
   /* Cinq états : désordre, colonnes par métier, outils reliés, un seul écran, l'anneau */
   const q = (x, y, z) => new THREE.Quaternion().setFromEuler(new THREE.Euler(x, y, z));
@@ -970,7 +1082,15 @@ if (renderer) {
       p.m.quaternion.copy(tmpQ);
       if (a === 0 && t < 0.6) p.m.rotateY(Math.sin(horloge * 0.2 + p.phase) * 0.25 * (1 - t) * calmeIci);
       p.m.scale.setScalar(A.s + (B.s - A.s) * t);
-      p.m.material.opacity = (A.o ?? 1) + ((B.o ?? 1) - (A.o ?? 1)) * t;
+      let opacite = (A.o ?? 1) + ((B.o ?? 1) - (A.o ?? 1)) * t;
+      normale.set(0, 0, 1).applyQuaternion(p.m.quaternion);
+      const eclairage = 0.6 + 0.5 * Math.abs(normale.dot(LUMIERE));
+      p.mats[0].color.setScalar(eclairage); p.mats[1].color.setScalar(eclairage * 0.9); p.tranche.color.setScalar(0.45 + 0.4 * Math.abs(normale.dot(LUMIERE)));
+      versCamera.copy(camera.position).sub(p.m.position); const distance = versCamera.length();
+      const u = p.face.userData.u;
+      u.uFlou.value = capture ? 0 : Math.min(1, Math.max(0, (distance - 24) / 14, (11 - distance) / 6));
+      u.uBande.value = 0.85 + normale.x * 2.2 - normale.y * 1.6 + Math.sin(horloge * 0.15 + p.phase) * 0.25 * calmeIci;
+      u.uReflet.value = 0.012 + 0.012 * Math.max(0, normale.dot(LUMIERE));
       if (entree < 0.999) {
         const local = Math.min(1, Math.max(0, (entree - p.retard) / 0.5));
         const k = 1 - Math.pow(1 - local, 3);
@@ -978,8 +1098,9 @@ if (renderer) {
         p.m.position.lerp(tmpP, 1 - k);
         tmpQ.copy(p.m.quaternion); p.m.quaternion.copy(p.tourbillon).slerp(tmpQ, k);
         p.m.scale.multiplyScalar(Math.max(0.001, k));
-        p.m.material.opacity *= Math.min(1, local * 2.5);
+        opacite *= Math.min(1, local * 2.5);
       }
+      for (const mt of p.mats) mt.opacity = opacite;
     }
     const poids = (k) => Math.max(0, 1 - Math.abs(s - k) * 1.6);
     fils.material.opacity = poids(2) * 0.85;
@@ -987,6 +1108,7 @@ if (renderer) {
     anneau.material.opacity = Math.max(0, Math.min(1, (s - 3.3) / 0.7));
     cadre.material.opacity = poids(3);
     anneau.rotation.z = horloge * 0.05 * calmeIci;
+    poussiere.rotation.y = horloge * 0.012 * calmeIci; poussiere.position.y = Math.sin(horloge * 0.1) * 0.3 * calmeIci;
 
     regard.lerp(pointeur, 0.04);
     camera.position.x = regard.x * (mobile ? 0.4 : 1.4);
