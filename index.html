@@ -176,6 +176,7 @@ main, .index-recit { position: relative; z-index: 2; }
 .recit .nom { font-size: 0.875rem; color: var(--or); display: flex; align-items: center; gap: 12px; }
 .recit .nom::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: var(--or); }
 .recit h2 { font-size: clamp(2.125rem, 0.9rem + 4.6vw, 5.75rem); }
+@media (min-width: 900px) { .recit h2 .ligne > span { white-space: nowrap; } }
 .recit p { color: var(--creme); max-width: 34ch; }
 .recit .detail { color: var(--creme-doux); font-size: 0.9375rem; }
 .repli { display: none; }
@@ -348,8 +349,8 @@ main, .index-recit { position: relative; z-index: 2; }
 <header class="barre">
   <a class="logo" href="#haut" aria-label="JD Consult, retour en haut"><img src="assets/logo-jd-consult-clair.svg" alt="JD Consult" width="141" height="54"></a>
   <nav aria-label="Navigation principale">
-    <a href="#recit"><span class="coupe"><span data-texte="Ce que je fais">Ce que je fais</span></span></a>
-    <a href="#methode"><span class="coupe"><span data-texte="Comment je travaille">Comment je travaille</span></span></a>
+    <a href="#recit"><span class="coupe"><span data-texte="L’accompagnement">L’accompagnement</span></span></a>
+    <a href="#methode"><span class="coupe"><span data-texte="La méthode">La méthode</span></span></a>
     <a href="#pour-qui"><span class="coupe"><span data-texte="Pour qui">Pour qui</span></span></a>
     <a href="#qui"><span class="coupe"><span data-texte="Qui je suis">Qui je suis</span></span></a>
   </nav>
@@ -382,7 +383,7 @@ main, .index-recit { position: relative; z-index: 2; }
   </section>
 
   <section class="recit" id="recit" aria-labelledby="recit-titre">
-    <h2 class="visuellement-cache" id="recit-titre">Ce que je fais, en cinq temps</h2>
+    <h2 class="visuellement-cache" id="recit-titre">En cinq temps</h2>
     <article class="chapitre" data-etat="0">
       <div class="texte">
         <span class="nom apparait">Le constat</span>
@@ -394,7 +395,7 @@ main, .index-recit { position: relative; z-index: 2; }
     <article class="chapitre" data-etat="1">
       <div class="texte">
         <span class="nom apparait">Le diagnostic</span>
-        <h2 class="serif monte"><span class="ligne"><span>D’abord,</span></span><span class="ligne" style="--i:1"><span>je viens voir.</span></span></h2>
+        <h2 class="serif monte"><span class="ligne"><span>D’abord,</span></span><span class="ligne" style="--i:1"><span>voir sur le terrain.</span></span></h2>
         <p class="apparait" style="--i:1">Sur place, avec vous et votre équipe. Pour chaque métier, je note ce qui se ressaisit, ce qui se perd et ce qui coince.</p>
         <p class="detail apparait" style="--i:2">Le dirigeant, le commercial, le chantier, l’administration&nbsp;: chacun a ses besoins.</p>
       </div>
@@ -403,7 +404,7 @@ main, .index-recit { position: relative; z-index: 2; }
     <article class="chapitre" data-etat="2">
       <div class="texte">
         <span class="nom apparait">Intégrer</span>
-        <h2 class="serif monte"><span class="ligne"><span>Ce qui existe déjà,</span></span><span class="ligne" style="--i:1"><span>on le branche.</span></span></h2>
+        <h2 class="serif monte"><span class="ligne"><span>Connecter ce qui</span></span><span class="ligne" style="--i:1"><span>existe déjà.</span></span></h2>
         <p class="apparait" style="--i:1">Souvent, l’outil qu’il vous faut existe déjà. Je le choisis avec vous, je le règle et je le relie aux autres, pour que chacun n’ait qu’un seul accès.</p>
       </div>
       <figure class="repli"><img src="assets/scene/etat-3.webp" width="1600" height="900" loading="lazy" alt="Cinq groupes de fragments, cinq outils, reliés par des fils d’or à un même centre."></figure>
@@ -411,7 +412,7 @@ main, .index-recit { position: relative; z-index: 2; }
     <article class="chapitre" data-etat="3">
       <div class="texte">
         <span class="nom apparait">Créer</span>
-        <h2 class="serif monte"><span class="ligne"><span>Ce qui manque,</span></span><span class="ligne" style="--i:1"><span>je le construis.</span></span></h2>
+        <h2 class="serif monte"><span class="ligne"><span>Construire ensemble</span></span><span class="ligne" style="--i:1"><span>ce qui manque.</span></span></h2>
         <p class="apparait" style="--i:1">Quand aucun logiciel ne colle à votre façon de travailler, je conçois un outil sur mesure, pensé pour ceux qui s’en serviront.</p>
       </div>
       <figure class="repli"><img src="assets/scene/etat-4.webp" width="1600" height="900" loading="lazy" alt="Tous les fragments s’assemblent en un seul grand écran."></figure>
@@ -430,7 +431,7 @@ main, .index-recit { position: relative; z-index: 2; }
   <section class="travail" id="methode" aria-labelledby="travail-titre">
     <div class="travail__colle">
       <div class="travail__tete">
-        <h2 class="serif monte" id="travail-titre"><span class="ligne"><span>Comment je travaille</span></span></h2>
+        <h2 class="serif monte" id="travail-titre"><span class="ligne"><span>La méthode</span></span></h2>
         <p class="apparait">Trois temps, un seul interlocuteur du début à la fin.</p>
       </div>
       <ol class="travail__piste">
@@ -442,7 +443,7 @@ main, .index-recit { position: relative; z-index: 2; }
           </svg>
           <div class="etape__texte">
             <h3 class="serif">Le premier échange</h3>
-            <p>Une heure, au téléphone ou chez vous. Vous me racontez votre entreprise, je pose des questions, et je vous dis franchement si je peux vous aider.</p>
+            <p>Une heure, au téléphone ou chez vous. Vous me racontez votre entreprise, nous faisons le point ensemble, et je vous dis franchement si je peux vous aider.</p>
             <span class="etape__note">Gratuit, sans engagement.</span>
           </div>
         </li>
@@ -488,7 +489,7 @@ main, .index-recit { position: relative; z-index: 2; }
     <div class="voile" aria-hidden="true"></div>
     <div class="contenu">
       <div>
-        <h2 id="pour-qui-titre">Pour qui je travaille</h2>
+        <h2 id="pour-qui-titre">Pour qui</h2>
         <ul>
           <li><button type="button" aria-pressed="true" data-texte="Devis sur place, bons d’intervention, planning des équipes et des chantiers.">Artisans et BTP</button></li>
           <li><button type="button" aria-pressed="false" data-texte="Caisse, stocks, commandes et suivi des clients, au même endroit.">Commerces</button></li>
@@ -518,7 +519,7 @@ main, .index-recit { position: relative; z-index: 2; }
       </div>
     </div>
     <div class="outils">
-      <h3 class="apparait">Deux outils que j’ai construits</h3>
+      <h3 class="apparait">Deux outils déjà en service</h3>
       <div class="outils__liste">
         <article class="outil apparait">
           <h4 class="serif">JD precompta</h4>
