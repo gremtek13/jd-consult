@@ -1,0 +1,5 @@
+# Tout le site est ouvert aux moteurs de recherche et aux robots des IA.
+User-agent: *
+Allow: /
+
+Sitemap: https://jdconsult.fr/sitemap.xml

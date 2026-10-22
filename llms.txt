@@ -1,0 +1,46 @@
+# JD Consult
+
+> Conseil en transformation digitale pour les TPE et PME, à Marseille. JD Consult intègre les outils numériques qui existent déjà et crée sur mesure ceux qui manquent, pour chaque métier de l'équipe : le dirigeant, le commercial, le chantier, l'administration. Premier échange gratuit et sans engagement.
+
+Fondateur et interlocuteur unique : Jérémy Darnis, ancien soignant devenu consultant. Interventions sur place à Marseille et dans les Bouches-du-Rhône, à distance partout ailleurs. Société en cours de création.
+
+## Ce que fait JD Consult
+
+- Le diagnostic : sur place, avec le dirigeant et l'équipe, relever pour chaque métier ce qui se ressaisit, ce qui se perd et ce qui coince.
+- Intégrer : choisir avec l'entreprise les logiciels qui existent déjà, les régler et les relier, pour que chacun n'ait qu'un seul accès.
+- Créer : quand aucun logiciel ne colle à la façon de travailler, concevoir un outil sur mesure, pensé pour ceux qui s'en serviront.
+- Former chaque personne à ses outils, et rester joignable ensuite.
+
+JD Consult travaille avec l'expert-comptable de l'entreprise ; il ne le remplace pas.
+
+## La méthode
+
+1. Le premier échange : une heure, au téléphone ou sur place, gratuite et sans engagement. L'entreprise se présente ; JD Consult dit franchement s'il peut l'aider.
+2. Le plan : du temps passé dans l'entreprise avec chaque métier, puis un plan écrit — ce qu'on intègre, ce qu'on crée, dans quel ordre et pour quel prix. Un devis clair avant tout engagement.
+3. La mise en place : installation, raccordement des outils, création de ce qui manque, formation de chaque personne.
+
+## Pour qui
+
+Exemples de besoins, pas une liste fermée :
+
+- Artisans et BTP : devis sur place, bons d'intervention, planning des équipes et des chantiers.
+- Commerces : caisse, stocks, commandes et suivi des clients, au même endroit.
+- Cafés et restaurants : réservations, plannings du personnel, commandes aux fournisseurs.
+- Cabinets et libéraux : rendez-vous, dossiers clients, facturation et relances.
+- Entreprises de services : suivi commercial, devis, relances et tableau de bord du dirigeant.
+
+## Outils déjà construits par Jérémy Darnis
+
+- [JD precompta](https://compta.jdarnis.fr) : application web de précomptabilité pour un cabinet comptable et ses clients — pièces déposées et lues automatiquement, rapprochement bancaire, factures et facture électronique, déclarations préparées.
+- JD Factu : outil sur mesure de facturation et de planning pour un cabinet infirmier — patients, ordonnances, tournées du mois, suivi de ce qui a été déclaré.
+
+## Contact
+
+- E-mail : contact@jdconsult.fr
+- Téléphone : 06 14 14 94 44 (+33 6 14 14 94 44)
+- Site : https://jdconsult.fr/
+
+## Pages
+
+- [Accueil](https://jdconsult.fr/) : la présentation complète, la méthode, pour qui, qui est Jérémy Darnis, le contact.
+- [Mentions légales](https://jdconsult.fr/mentions-legales.html) : éditeur, hébergeur, données personnelles.
